@@ -69,7 +69,7 @@ def create_note():
 
     if provided_key != API_KEY:
         return jsonify({"error": "Unauthorized"}), 401
-    return jsonify({"notes": "under development", "data": request.json()}), 200
+    return jsonify({"notes": "under development"}), 200
 
 @app.route('/task', methods=['POST'])
 def create_task():
@@ -77,7 +77,7 @@ def create_task():
 
     if provided_key != API_KEY:
         return jsonify({"error": "Unauthorized"}), 401
-    return jsonify({"tasks": "under development", "data": request.json()}), 200
+    return jsonify({"tasks": "under development"}), 200
 
 
 if __name__ == '__main__':
