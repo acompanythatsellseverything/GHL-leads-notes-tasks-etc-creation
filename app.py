@@ -4,7 +4,7 @@ from logging.handlers import TimedRotatingFileHandler
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 
-from utils.utils import create_ghl_lead
+from utils.create_lead import create_ghl_lead
 
 app = Flask(__name__)
 
@@ -51,17 +51,17 @@ def create_lead():
     if provided_key != API_KEY:
         return jsonify({"error": "Unauthorized"}), 401
     logger.info(f"Received lead request with such payload:\n{request.json}")
-    try:
-        lead = create_ghl_lead(request.json)
+    #try: # TODO uncomment these
+    lead = create_ghl_lead(request.json)
 
-        if lead.get("User was not created"):
-            logger.info(f"User was not created\n{lead}")
-            return jsonify({"error": f"User was not created\n{lead}"}), 405
+    if not lead.get("contact"):
+        logger.info(f"User was not created\n{lead}")
+        return jsonify({"error": f"User was not created\n{lead}"}), 405
 
-        return jsonify({"message": f"Lead successfully created\n{lead}"}), 201
-    except Exception as e:
-        logger.error(f"Error while creating a lead{e}")
-        return jsonify({"message": f"error: {e}"}), 405
+    return jsonify({"Lead successfully created": f"{lead}"}), 201
+    # except Exception as e:
+    #     logger.error(f"Error while creating a lead {e}")
+    #     return jsonify({"message": f"error: {e}"}), 405
 
 @app.route('/note', methods=['POST'])
 def create_note():
