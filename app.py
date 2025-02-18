@@ -63,6 +63,22 @@ def create_lead():
         logger.error(f"Error while creating a lead{e}")
         return jsonify({"message": f"error: {e}"}), 405
 
+@app.route('/note', methods=['POST'])
+def create_note():
+    provided_key = request.headers.get("X-API-KEY")
+
+    if provided_key != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    return jsonify({"notes": "under development", "data": request.json()}), 200
+
+@app.route('/task', methods=['POST'])
+def create_task():
+    provided_key = request.headers.get("X-API-KEY")
+
+    if provided_key != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    return jsonify({"tasks": "under development", "data": request.json()}), 200
+
 
 if __name__ == '__main__':
     app.run()
