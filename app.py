@@ -1,10 +1,12 @@
 import os
 import logging
+import traceback
 from logging.handlers import TimedRotatingFileHandler
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 
 from utils.create_lead import create_ghl_lead
+from utils.slack_troubleshooting import send_slack_notification
 
 app = Flask(__name__)
 
@@ -52,19 +54,21 @@ def create_lead():
         return jsonify({"error": "Unauthorized"}), 401
     logger.info(f"Received lead request with such payload:\n{request.json}")
 
-    # try: TODO remove coments
-    lead = create_ghl_lead(request.json)
+    try:
+        lead = create_ghl_lead(request.json)
 
-    if not lead.get("contact"):
-        logger.info(f"User was not created\n{lead}")
-        return jsonify({"error": f"User was not created\n{lead}"}), 200
+        if not lead.get("contact"):
+            logger.info(f"User was not created\n{lead}")
+            return jsonify({"error": f"User was not created\n{lead}"}), 200
 
-    logger.info(f"User was created\n{lead}")
-    return jsonify({"Lead successfully created": f"{lead}"}), 201
+        logger.info(f"User was created\n{lead}")
+        return jsonify({"Lead successfully created": f"{lead}"}), 201
 
-    # except Exception as e:
-    #     logger.error(f"Error while creating a lead {e}")
-    #     return jsonify({"message": f"error: {e}"}), 400
+    except Exception as e:
+        error_msg = traceback.format_exc()
+        send_slack_notification("Error while creating lead\n" + str(e) + "\n" + str(error_msg))
+        logger.error("Error while creating lead\n" + str(e) + "\n" + str(error_msg))
+        return jsonify({"message": f"error: {e}"}), 400
 
 @app.route('/note', methods=['POST'])
 def create_note():

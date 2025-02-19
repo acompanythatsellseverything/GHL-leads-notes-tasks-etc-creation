@@ -11,7 +11,7 @@ load_dotenv()
 logger = logging.getLogger()
 
 GHL_API_KEY = os.getenv('GHL_API_KEY')
-HEADERS = {'Authorization': f'Bearer {GHL_API_KEY}'}
+# HEADERS = {'Authorization': f'Bearer {GHL_API_KEY}'}
 
 CREATE_LEAD_BASE_URL = "https://rest.gohighlevel.com/v1/contacts/"
 LOOKUP_BASE_URL = "https://rest.gohighlevel.com/v1/contacts/lookup?email="
