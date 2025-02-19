@@ -4,6 +4,8 @@ import logging
 
 from dotenv import load_dotenv
 
+from utils.create_note import create_lead_property_inquiry
+
 load_dotenv()
 
 logger = logging.getLogger()
@@ -16,14 +18,20 @@ LOOKUP_BASE_URL = "https://rest.gohighlevel.com/v1/contacts/lookup?email="
 
 
 # Check if such contact already exists in GHL
-def ghl_contact_lookup(lookup_email):
+def ghl_contact_lookup(data):
+    lookup_email = data["person"]["emails"][0].get("value")
     response = requests.get(LOOKUP_BASE_URL + lookup_email, headers=HEADERS)
     logger.info(f"contact look up response\n{response.json()}")
+
     if response.json().get("contacts"):
+        # If contact already exists in GHL - create only note (Property Inquiry)
+        ghl_id = response.json().get("contacts")[0].get("id")
+        create_lead_property_inquiry(ghl_id, data)
         return True
     return False
 
 
+# Preparing json data for ghl api
 def prepare_json_data_for_ghl(data: dict) -> dict:
     result = {}
     person_data = data["person"]
@@ -52,11 +60,13 @@ def prepare_json_data_for_ghl(data: dict) -> dict:
 
 
 def create_ghl_lead(data):
-    email = data["person"]["emails"][0].get("value")
-    existing_lead = ghl_contact_lookup(email)
+    existing_lead = ghl_contact_lookup(data)
     if existing_lead:
-        return {"error": "User already exists or an error occur"}
+        return {"issue": "User already exists, inquiry added"}
     else:
+        # if there is now such lead in GHL - create a lead and note(Property Inquiry)
         prepared_ghl_json = prepare_json_data_for_ghl(data)
         response = requests.post(CREATE_LEAD_BASE_URL, json=prepared_ghl_json, headers=HEADERS)
+        ghl_id = response.json().get("contact").get("id")
+        create_lead_property_inquiry(ghl_id, data)
         return response.json()

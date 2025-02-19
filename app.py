@@ -51,17 +51,20 @@ def create_lead():
     if provided_key != API_KEY:
         return jsonify({"error": "Unauthorized"}), 401
     logger.info(f"Received lead request with such payload:\n{request.json}")
-    try:
-        lead = create_ghl_lead(request.json)
 
-        if not lead.get("contact"):
-            logger.info(f"User was not created\n{lead}")
-            return jsonify({"error": f"User was not created\n{lead}"}), 405
+    # try: TODO remove coments
+    lead = create_ghl_lead(request.json)
 
-        return jsonify({"Lead successfully created": f"{lead}"}), 201
-    except Exception as e:
-        logger.error(f"Error while creating a lead {e}")
-        return jsonify({"message": f"error: {e}"}), 405
+    if not lead.get("contact"):
+        logger.info(f"User was not created\n{lead}")
+        return jsonify({"error": f"User was not created\n{lead}"}), 200
+
+    logger.info(f"User was created\n{lead}")
+    return jsonify({"Lead successfully created": f"{lead}"}), 201
+
+    # except Exception as e:
+    #     logger.error(f"Error while creating a lead {e}")
+    #     return jsonify({"message": f"error: {e}"}), 400
 
 @app.route('/note', methods=['POST'])
 def create_note():
