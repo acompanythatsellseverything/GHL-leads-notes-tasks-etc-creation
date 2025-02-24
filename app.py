@@ -40,8 +40,9 @@ logger.setLevel(logging.INFO)
 logger.addHandler(file_handler)
 logger.addHandler(console_handler)
 
+
 @app.route('/')
-def index():  # put application's code here
+def index():
     logger.debug("Home route accessed")
     return render_template("index.html")
 
@@ -70,6 +71,7 @@ def create_lead():
         logger.error("Error while creating lead\n" + str(e) + "\n" + str(error_msg))
         return jsonify({"message": f"error: {e}"}), 400
 
+
 @app.route('/note', methods=['POST'])
 def create_note():
     provided_key = request.headers.get("X-API-KEY")
@@ -77,6 +79,7 @@ def create_note():
     if provided_key != API_KEY:
         return jsonify({"error": "Unauthorized"}), 401
     return jsonify({"notes": "under development"}), 200
+
 
 @app.route('/task', methods=['POST'])
 def create_task():
