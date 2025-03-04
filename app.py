@@ -47,13 +47,15 @@ def index():
     return render_template("index.html")
 
 
-@app.route('/lead', methods=['POST'])
+@app.route('/lead', methods=['POST', 'PUT'])
 def create_lead():
     provided_key = request.headers.get("X-API-KEY")
 
     if provided_key != API_KEY:
         return jsonify({"error": "Unauthorized"}), 401
     logger.info(f"Received lead request with such payload:\n{request.json}")
+    if request.method == "PUT":
+        return jsonify({"dev": "PUT method under development"}), 200
 
     try:
         lead = create_ghl_lead(request.json)
