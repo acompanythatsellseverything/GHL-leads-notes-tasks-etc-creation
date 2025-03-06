@@ -7,11 +7,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-logger = logging.getLogger()
-
 GHL_API_KEY = os.getenv('GHL_API_KEY')
 HEADERS = {'Authorization': f'Bearer {GHL_API_KEY}'}
-LOOKUP_BASE_URL = "https://rest.gohighlevel.com/v1/contacts/lookup?email="
 UPDATE_BASE_URL = "https://rest.gohighlevel.com/v1/contacts/"
 
 
@@ -40,20 +37,7 @@ def prepare_lead_data(data: dict) -> dict:
     return lead_data
 
 
-def ghl_contact_lookup(data: dict):
-    lookup_email = data["person"]["emails"][0].get("value")
-    response = requests.get(LOOKUP_BASE_URL + lookup_email, headers=HEADERS)
-    logger.info(f"contact look up response\n{response.json()}")
-    if response.json().get("contacts"):
-        ghl_id = response.json().get("contacts")[0].get("id")
-        return ghl_id
-    return False
-
-
-def update_lead(data: dict) -> dict:
-    ghl_id = ghl_contact_lookup(data)
-    if ghl_id is False:
-        return {"error": "Contact not found"}
+def _update_lead(data: dict, ghl_id: str) -> dict:
     prepared_lead_data = prepare_lead_data(data)
     response = requests.put(UPDATE_BASE_URL + ghl_id, headers=HEADERS, json=prepared_lead_data)
     return response.json()

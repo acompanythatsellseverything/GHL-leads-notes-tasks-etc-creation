@@ -6,7 +6,7 @@ from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 
 from utils.create_lead import create_ghl_lead
-from utils.update_lead import update_lead
+from utils.update_lead import _update_lead
 from utils.slack_troubleshooting import send_slack_notification
 from utils.utils import _get_lead_by_email
 
@@ -49,7 +49,7 @@ def index():
     return render_template("index.html")
 
 
-@app.route('/lead', methods=['POST', 'PUT'])
+@app.route('/lead', methods=['POST'])
 def create_lead():
 
     # auth block ______________________________________________
@@ -58,23 +58,6 @@ def create_lead():
         return jsonify({"error": "Unauthorized"}), 401
     logger.info(f"Received lead request with such payload:\n{request.json}")
     # end auth block _____________________________________________
-
-    # update lead block ____________________________________________
-    if request.method == "PUT":
-        try:
-            updated_lead = update_lead(request.json)
-            if not updated_lead.get("contact"):
-                logger.info(f"User was not updated\n{updated_lead}")
-                return jsonify({"error": f"User was not updated\n{updated_lead}"}), 200
-
-            logger.info(f"User was updated\n{updated_lead}")
-            return jsonify({"Lead successfully updated": f"{updated_lead}"}), 201
-        except Exception as e:
-            error_msg = traceback.format_exc()
-            send_slack_notification("Error while updating lead\n" + str(e) + "\n" + str(error_msg))
-            logger.error("Error while updating lead\n" + str(e) + "\n" + str(error_msg))
-            return jsonify({"message": f"error: {e}"}), 400
-    # end update lead block ______________________________
 
     # create lead block _______________________________________
     try:
@@ -93,6 +76,33 @@ def create_lead():
         logger.error("Error while creating lead\n" + str(e) + "\n" + str(error_msg))
         return jsonify({"message": f"error: {e}"}), 400
     # end create lead block ___________________________________________
+
+
+@app.route('/lead/<string:lead_id>', methods=['PUT'])
+def update_lead(lead_id):
+
+    # auth block ______________________________________________
+    provided_key = request.headers.get("X-API-KEY")
+    if provided_key != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    logger.info(f"Received lead request with such payload:\n{request.json}")
+    # end auth block _____________________________________________
+
+    # update lead block ____________________________________________
+    try:
+        updated_lead = _update_lead(request.json, lead_id)
+        if not updated_lead.get("contact"):
+            logger.info(f"User was not updated\n{updated_lead}")
+            return jsonify({"error": f"User was not updated\n{updated_lead}"}), 200
+
+        logger.info(f"User was updated\n{updated_lead}")
+        return jsonify({"Lead successfully updated": f"{updated_lead}"}), 201
+    except Exception as e:
+        error_msg = traceback.format_exc()
+        send_slack_notification("Error while updating lead\n" + str(e) + "\n" + str(error_msg))
+        logger.error("Error while updating lead\n" + str(e) + "\n" + str(error_msg))
+        return jsonify({"message": f"error: {e}"}), 400
+    # end update lead block ______________________________
 
 
 @app.route('/get_lead', methods=['POST'])
