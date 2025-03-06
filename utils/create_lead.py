@@ -44,7 +44,6 @@ def prepare_json_data_for_ghl(data: dict) -> dict:
     result["state"] = person_data["addresses"][0].get("state")
     result["source"] = data.get("source")
     result["tags"] = person_data.get("tags")
-    result["tags"].append("rca signed")
     result["customField"] = {
         "R3CCQhYeG4kZ5NSTW5vk": person_data.get("customListingType"),  # Listing Type
         "F4Bkzj3AXKtBiri6S3Xe": person_data.get("customFB4SRCAURL"),  # FB4S RCA URL

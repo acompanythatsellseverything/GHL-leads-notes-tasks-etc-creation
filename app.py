@@ -5,6 +5,7 @@ from logging.handlers import TimedRotatingFileHandler
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 
+from utils.add_tags import add_tags
 from utils.create_lead import create_ghl_lead
 from utils.update_lead import _update_lead
 from utils.slack_troubleshooting import send_slack_notification
@@ -117,13 +118,24 @@ def get_lead_by_email():
     return jsonify({"lead_id": ghl_id}), 200
 
 
-@app.route('/note', methods=['POST'])
-def create_note():
+@app.route('/lead/<string:lead_id>/tags', methods=['PATCH'])
+def add_tag_to_lead(lead_id):
     provided_key = request.headers.get("X-API-KEY")
 
     if provided_key != API_KEY:
         return jsonify({"error": "Unauthorized"}), 401
-    return jsonify({"notes": "under development"}), 200
+    logger.info(f"Received tags payload:\n{request.json}")
+
+    try:
+        lead = add_tags(ghl_id=lead_id, tags_to_add=request.json)
+        return jsonify({"data": lead})
+
+    except Exception as e:
+        error_msg = traceback.format_exc()
+        send_slack_notification("Error while adding tags\n" + str(e) + "\n" + str(error_msg))
+        logger.error("Error while adding tags\n" + str(e) + "\n" + str(error_msg))
+        return jsonify({"message": f"error: {e}"}), 400
+
 
 
 @app.route('/task', methods=['POST'])
