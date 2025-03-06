@@ -51,7 +51,11 @@ def prepare_json_data_for_ghl(data: dict) -> dict:
         "t7EBTF8Ub1JgdGl7N5mE": person_data.get("customBuyerProfileFB4S"),  # Buyer Profile FB4S
         "5k6Sn4LgOC109kGbPKXA": person_data.get("customFB4SInquiriesCounter"),  # FB4S Inquiries Counter
         "3kOQc4txrHj7dledzdNJ": person_data.get("customMLSNumber"),  # MLS Number
+        "KUpiQ32dAm11q4gu9MB1": person_data.get("customChromeExtensionLink"),  # Chrome Extension Link
         "ULUCaQYI9uurYn8mfpu9": property_data.get("url"),  # Listing URL
+        "2C3PcAa0JdOHRu95mWzp": person_data.get("customListingURLPath"),  # Listing URL Path
+        "pwwHyq93djePQzzMECFI": person_data.get("customAssignedNotFromWillowAt"),  # Assigned Not From Willow At
+        "01MYfI09Z919mFibcZNG": person_data.get("customExpectedPriceRange"),  # Expected Price Range
         "EcWFyMMhEZuLm5hz9wpP": person_data.get("customProvince"),  # Province
         "fNUZTAUpB0BiA3ff5nSG": person_data.get("customAddress"),  # Custom Address
         "yIiyCWtlHAkfKrWwin3H": person_data.get("customCity"),  # Custom City
