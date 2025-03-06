@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from utils.create_lead import create_ghl_lead
 from utils.update_lead import update_lead
 from utils.slack_troubleshooting import send_slack_notification
+from utils.utils import _get_lead_by_email
 
 app = Flask(__name__)
 
@@ -92,6 +93,18 @@ def create_lead():
         logger.error("Error while creating lead\n" + str(e) + "\n" + str(error_msg))
         return jsonify({"message": f"error: {e}"}), 400
     # end create lead block ___________________________________________
+
+
+@app.route('/get_lead', methods=['POST'])
+def get_lead_by_email():
+    provided_key = request.headers.get("X-API-KEY")
+    if provided_key != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    lead_email = request.json.get("email")
+    ghl_id = _get_lead_by_email(lead_email)
+    if ghl_id is False:
+        return jsonify({"message": f"There is no such contact with email = {lead_email}"}), 200
+    return jsonify({"lead_id": ghl_id}), 200
 
 
 @app.route('/note', methods=['POST'])
