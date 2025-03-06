@@ -1,0 +1,204 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "FUB to GHL service",
+    "description": "API for managing leads, updating tags, and handling tasks.",
+    "version": "1.0.0"
+  },
+  "host": "localhost:5000",
+  "basePath": "/",
+  "schemes": ["http"],
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "X-API-KEY"
+    }
+  },
+  "paths": {
+    "/lead": {
+      "post": {
+        "summary": "Create a new lead or add a new inquiry note",
+        "description": "Creates a lead in the GHL system. If it already exists, adds a inquiry note",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "person": {
+                "type": "object",
+                "properties": {
+                  "id": {"type": "integer"},
+                  "firstName": {"type": "string"},
+                  "lastName": {"type": "string"},
+                  "addresses": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "city": {"type": "string"},
+                        "state": {"type": "string"}
+                      }
+                    }
+                  },
+                  "customMLSNumber": {"type": "string"},
+                  "customListingType": {"type": "string"},
+                  "customAddress": {"type": "string"},
+                  "customCity": {"type": "string"},
+                  "customProvince": {"type": "string"},
+                  "customFB4SLeadID": {"type": "string"},
+                  "customFB4SRCAURL": {"type": "string"},
+                  "customFB4SInquiriesCounter": {"type": "string"},
+                  "customBuyerProfileFB4S": {"type": "string"},
+                  "customAssignedNotFromWillowAt": {"type": "string"},
+                  "emails": {
+                    "type": "array",
+                    "items": {"type": "object", "properties": {"value": {"type": "string"}}}
+                  },
+                  "phones": {
+                    "type": "array",
+                    "items": {"type": "object", "properties": {"value": {"type": "string"}}}
+                  },
+                  "tags": {"type": "array", "items": {"type": "string"}}
+                }
+              },
+              "property": {
+                "type": "object",
+                "properties": {
+                  "street": {"type": "string"},
+                  "city": {"type": "string"},
+                  "state": {"type": "string"},
+                  "code": {"type": "string"},
+                  "mlsNumber": {"type": "string"},
+                  "url": {"type": "string"}
+                }
+              },
+              "type": {"type": "string"},
+              "source": {"type": "string"},
+              "system": {"type": "string"},
+              "description": {"type": "string"},
+              "message": {"type": "string"}
+            },
+            "required": ["person", "property", "type", "source", "system", "description", "message"]
+          }
+        }
+      ],
+        "responses": {
+          "201": {"description": "Lead successfully created"},
+          "400": {"description": "Error creating lead"},
+          "401": {"description": "Unauthorized"}
+        }
+      }
+    },
+    "/lead/{lead_id}": {
+      "put": {
+        "summary": "Update an existing lead",
+        "description": "Updates lead details using the lead ID.",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "lead_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the lead to update"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {"type": "string"},
+                "email": {"type": "string"},
+                "phone": {"type": "string"}
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {"description": "Lead successfully updated"},
+          "400": {"description": "Error updating lead"},
+          "401": {"description": "Unauthorized"}
+        }
+      }
+    },
+    "/get_lead": {
+      "post": {
+        "summary": "Get lead by email",
+        "description": "Retrieves a lead ID based on email.",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {"type": "string"}
+              },
+              "required": ["email"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {"description": "Lead found"},
+          "401": {"description": "Unauthorized"}
+        }
+      }
+    },
+    "/lead/{lead_id}/tags": {
+      "patch": {
+        "summary": "Add tags to a lead",
+        "description": "Adds tags to an existing lead.",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "lead_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the lead to update"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "tags": {
+                  "type": "array",
+                  "items": {"type": "string"}
+                }
+              },
+              "required": ["tags"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {"description": "Tags added successfully"},
+          "400": {"description": "Error adding tags"},
+          "401": {"description": "Unauthorized"}
+        }
+      }
+    },
+    "/task": {
+      "post": {
+        "summary": "Create a task",
+        "description": "Creates a new task (currently under development).",
+        "security": [{"ApiKeyAuth": []}],
+        "responses": {
+          "200": {"description": "Task endpoint under development"},
+          "401": {"description": "Unauthorized"}
+        }
+      }
+    }
+  }
+}

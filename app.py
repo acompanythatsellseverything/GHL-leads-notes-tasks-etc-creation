@@ -3,19 +3,28 @@ import logging
 import traceback
 from logging.handlers import TimedRotatingFileHandler
 from flask import Flask, render_template, request, jsonify
+from flask_swagger_ui import get_swaggerui_blueprint
 from dotenv import load_dotenv
+from marshmallow import ValidationError
 
 from utils.add_tags import add_tags
 from utils.create_lead import create_ghl_lead
 from utils.update_lead import _update_lead
 from utils.slack_troubleshooting import send_slack_notification
 from utils.utils import _get_lead_by_email
+from validation.lead_validation_schema import PostLeadSchema, post_lead_schema
 
 app = Flask(__name__)
 
 load_dotenv()
 
 API_KEY = os.getenv("FLASK_API_KEY")
+
+# Swagger
+SWAGGER_URL = "/swagger"
+API_DOCS = "/static/swagger.json"
+swagger_ui = get_swaggerui_blueprint(SWAGGER_URL, API_DOCS)
+app.register_blueprint(swagger_ui, url_prefix=SWAGGER_URL)
 
 # Ensure the logs directory exists
 log_directory = "logs"
@@ -62,7 +71,9 @@ def create_lead():
 
     # create lead block _______________________________________
     try:
-        lead = create_ghl_lead(request.json)
+        validated_data = post_lead_schema.load(request.json)
+
+        lead = create_ghl_lead(validated_data)
 
         if not lead.get("contact"):
             logger.info(f"User was not created\n{lead}")
@@ -70,6 +81,10 @@ def create_lead():
 
         logger.info(f"User was created\n{lead}")
         return jsonify({"Lead successfully created": f"{lead}"}), 201
+
+    except ValidationError as err:
+        send_slack_notification("Validation Error while creating lead\n" + str(err))
+        return jsonify({"validation error": err.messages}), 400
 
     except Exception as e:
         error_msg = traceback.format_exc()
@@ -135,7 +150,6 @@ def add_tag_to_lead(lead_id):
         send_slack_notification("Error while adding tags\n" + str(e) + "\n" + str(error_msg))
         logger.error("Error while adding tags\n" + str(e) + "\n" + str(error_msg))
         return jsonify({"message": f"error: {e}"}), 400
-
 
 
 @app.route('/task', methods=['POST'])
