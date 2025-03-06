@@ -30,7 +30,7 @@ class PersonSchema(Schema):
     customParentCategory = fields.Str()
     customAbandonedPondReason = fields.Str()
     customChromeExtensionLink = fields.Url()
-    customFB4SInquiriesCounter = fields.Str()
+    customFB4SInquiriesCounter = fields.Int()
     customBuyerProfileFB4S = fields.Url()
     customAssignedNotFromWillowAt = fields.Str()
     emails = fields.List(fields.Nested(EmailSchema), required=True)
