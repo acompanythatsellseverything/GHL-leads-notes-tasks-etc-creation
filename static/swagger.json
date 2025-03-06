@@ -5,7 +5,7 @@
     "description": "API for managing leads, updating tags, and handling tasks.",
     "version": "1.0.0"
   },
-  "host": "localhost:5000",
+  "host": "3.98.147.51:5007",
   "basePath": "/",
   "schemes": ["http"],
   "securityDefinitions": {
