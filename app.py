@@ -13,7 +13,8 @@ from utils.update_lead import _update_lead
 from utils.slack_troubleshooting import send_slack_notification
 from utils.utils import _get_lead_by_email
 from validation.get_lead_validation import get_lead_by_email_schema
-from validation.lead_validation_schema import PostLeadSchema, post_lead_schema
+from validation.create_lead_validation import PostLeadSchema, post_lead_schema
+from validation.update_lead_validation import update_lead_schema
 
 app = Flask(__name__)
 
@@ -107,13 +108,18 @@ def update_lead(lead_id):
 
     # update lead block ____________________________________________
     try:
-        updated_lead = _update_lead(request.json, lead_id)
+        validated_data = update_lead_schema.load(request.json)
+        updated_lead = _update_lead(validated_data, lead_id)
         if not updated_lead.get("contact"):
             logger.info(f"User was not updated\n{updated_lead}")
             return jsonify({"error": f"User was not updated\n{updated_lead}"}), 200
 
         logger.info(f"User was updated\n{updated_lead}")
         return jsonify({"Lead successfully updated": f"{updated_lead}"}), 201
+    except ValidationError as err:
+        send_slack_notification("Validation Error while updating lead\n" + str(err))
+        logger.error("Validation Error while updating lead\n" + str(err))
+        return jsonify({"validation error while updating lead": err.messages}), 400
     except Exception as e:
         error_msg = traceback.format_exc()
         send_slack_notification("Error while updating lead\n" + str(e) + "\n" + str(error_msg))
