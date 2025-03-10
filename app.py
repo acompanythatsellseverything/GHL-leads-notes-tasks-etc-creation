@@ -12,6 +12,7 @@ from utils.create_lead import create_ghl_lead
 from utils.update_lead import _update_lead
 from utils.slack_troubleshooting import send_slack_notification
 from utils.utils import _get_lead_by_email
+from validation.get_lead_validation import get_lead_by_email_schema
 from validation.lead_validation_schema import PostLeadSchema, post_lead_schema
 
 app = Flask(__name__)
@@ -101,7 +102,7 @@ def update_lead(lead_id):
     provided_key = request.headers.get("X-API-KEY")
     if provided_key != API_KEY:
         return jsonify({"error": "Unauthorized"}), 401
-    logger.info(f"Received lead request with such payload:\n{request.json}")
+    logger.info(f"Received lead update request with such payload:\n{request.json}")
     # end auth block _____________________________________________
 
     # update lead block ____________________________________________
@@ -126,7 +127,13 @@ def get_lead_by_email():
     provided_key = request.headers.get("X-API-KEY")
     if provided_key != API_KEY:
         return jsonify({"error": "Unauthorized"}), 401
-    lead_email = request.json.get("email")
+    try:
+        validated_data = get_lead_by_email_schema.load(request.json)
+    except ValidationError as err:
+        send_slack_notification("Validation Error while getting lead\n" + str(err))
+        logger.error("Validation Error while getting lead\n" + str(err))
+        return jsonify({"validation error": err.messages}), 400
+    lead_email = validated_data.get("email")
     ghl_id = _get_lead_by_email(lead_email)
     if ghl_id is False:
         return jsonify({"message": f"There is no such contact with email = {lead_email}"}), 200
@@ -143,6 +150,7 @@ def add_tag_to_lead(lead_id):
 
     try:
         lead = add_tags(ghl_id=lead_id, tags_to_add=request.json)
+        logger.info("Tags added successfully")
         return jsonify({"data": lead})
 
     except Exception as e:
