@@ -53,6 +53,9 @@
                   "customFB4SLeadID": {"type": "string"},
                   "customFB4SRCAURL": {"type": "string"},
                   "customFB4SInquiriesCounter": {"type": "string"},
+                  "customChromeExtensionLink": {"type": "string"},
+                  "customListingURLPath": {"type": "string"},
+                  "customExpectedPriceRange": {"type": "string"},
                   "customBuyerProfileFB4S": {"type": "string"},
                   "customAssignedNotFromWillowAt": {"type": "string"},
                   "emails": {
@@ -100,27 +103,58 @@
         "description": "Updates lead details using the lead ID.",
         "security": [{"ApiKeyAuth": []}],
         "parameters": [
-          {
-            "name": "lead_id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "ID of the lead to update"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {"type": "string"},
-                "email": {"type": "string"},
-                "phone": {"type": "string"}
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "person": {
+                "type": "object",
+                "properties": {
+                  "id": {"type": "integer"},
+                  "firstName": {"type": "string"},
+                  "lastName": {"type": "string"},
+                  "addresses": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "city": {"type": "string"},
+                        "state": {"type": "string"}
+                      }
+                    }
+                  },
+                  "customMLSNumber": {"type": "string"},
+                  "customListingType": {"type": "string"},
+                  "customAddress": {"type": "string"},
+                  "customCity": {"type": "string"},
+                  "customProvince": {"type": "string"},
+                  "customFB4SLeadID": {"type": "string"},
+                  "customFB4SRCAURL": {"type": "string"},
+                  "customFB4SInquiriesCounter": {"type": "string"},
+                  "customBuyerProfileFB4S": {"type": "string"},
+                  "customChromeExtensionLink": {"type": "string"},
+                  "customListingURLPath": {"type": "string"},
+                  "customExpectedPriceRange": {"type": "string"},
+                  "customAssignedNotFromWillowAt": {"type": "string"},
+                  "emails": {
+                    "type": "array",
+                    "items": {"type": "object", "properties": {"value": {"type": "string"}}}
+                  },
+                  "phones": {
+                    "type": "array",
+                    "items": {"type": "object", "properties": {"value": {"type": "string"}}}
+                  },
+                  "tags": {"type": "array", "items": {"type": "string"}}
+                }
               }
-            }
+            },
+            "required": ["person"]
           }
-        ],
+        }
+      ],
         "responses": {
           "201": {"description": "Lead successfully updated"},
           "400": {"description": "Error updating lead"},
