@@ -11,7 +11,7 @@ from utils.add_tags import add_tags
 from utils.create_lead import create_ghl_lead
 from utils.update_lead import _update_lead
 from utils.slack_troubleshooting import send_slack_notification
-from utils.utils import _get_lead_by_email
+from utils.utils import _get_lead_by_email, _get_user_by_email
 from validation.get_lead_validation import get_lead_by_email_schema
 from validation.create_lead_validation import PostLeadSchema, post_lead_schema
 from validation.update_lead_validation import update_lead_schema
@@ -133,6 +133,7 @@ def get_lead_by_email():
     provided_key = request.headers.get("X-API-KEY")
     if provided_key != API_KEY:
         return jsonify({"error": "Unauthorized"}), 401
+    logger.info(f"Received payload for lead lookup {request.json}")
     try:
         validated_data = get_lead_by_email_schema.load(request.json)
     except ValidationError as err:
@@ -144,6 +145,24 @@ def get_lead_by_email():
     if ghl_id is False:
         return jsonify({"message": f"There is no such contact with email = {lead_email}"}), 200
     return jsonify({"lead_id": ghl_id}), 200
+
+
+@app.route('/get_user', methods=['POST'])
+def get_user_by_email():
+    provided_key = request.headers.get("X-API-KEY")
+    if provided_key != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    logger.info(f"Received payload for user lookup {request.json}")
+    try:
+        lookup_email = request.json.get("email")
+        team_member_id = _get_user_by_email(lookup_email)
+    except ValidationError as err:
+        send_slack_notification("Validation Error while getting lead\n" + str(err))
+        logger.error("Validation Error while getting lead\n" + str(err))
+        return jsonify({"validation error": err.messages}), 400
+    if team_member_id is False:
+        return jsonify({"message": f"There is no such user with email = {lookup_email}"}), 200
+    return jsonify({"user_id": team_member_id}), 200
 
 
 @app.route('/lead/<string:lead_id>/tags', methods=['PATCH'])
