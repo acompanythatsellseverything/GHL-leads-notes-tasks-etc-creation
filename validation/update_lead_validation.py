@@ -7,17 +7,18 @@ class AddressSchema(Schema):
 
 
 class EmailSchema(Schema):
-    value = fields.Email(required=True)
+    value = fields.Email()
 
 
 class PhoneSchema(Schema):
-    value = fields.Str(required=True)
+    value = fields.Str()
 
 
 class PersonSchema(Schema):
     id = fields.Int()
-    firstName = fields.Str(required=True)
-    lastName = fields.Str(required=True)
+    firstName = fields.Str()
+    lastName = fields.Str()
+    assignedUserId = fields.Str()
     addresses = fields.List(fields.Nested(AddressSchema))
     customMLSNumber = fields.Str()
     customListingType = fields.Str()
@@ -35,8 +36,8 @@ class PersonSchema(Schema):
     customExpectedPriceRange = fields.Str()
     customListingURLPath = fields.Str()
     customAssignedNotFromWillowAt = fields.Str()
-    emails = fields.List(fields.Nested(EmailSchema), required=True)
-    phones = fields.List(fields.Nested(PhoneSchema), required=True)
+    emails = fields.List(fields.Nested(EmailSchema))
+    phones = fields.List(fields.Nested(PhoneSchema))
     tags = fields.List(fields.Str())
 
 
