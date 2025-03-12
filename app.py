@@ -1,7 +1,6 @@
 import os
-import logging
 import traceback
-from logging.handlers import TimedRotatingFileHandler
+from logger import logger
 from flask import Flask, render_template, request, jsonify
 from flask_swagger_ui import get_swaggerui_blueprint
 from dotenv import load_dotenv
@@ -27,32 +26,6 @@ SWAGGER_URL = "/swagger"
 API_DOCS = "/static/swagger.json"
 swagger_ui = get_swaggerui_blueprint(SWAGGER_URL, API_DOCS)
 app.register_blueprint(swagger_ui, url_prefix=SWAGGER_URL)
-
-# Ensure the logs directory exists
-log_directory = "logs"
-if not os.path.exists(log_directory):
-    os.makedirs(log_directory)
-
-# Log file path
-log_file = os.path.join(log_directory, "app.log")
-
-# Set up file logging (rotating logs daily)
-file_handler = TimedRotatingFileHandler(
-    log_file, when="midnight", interval=1, backupCount=30, encoding="utf-8"
-)
-file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-file_handler.setLevel(logging.INFO)
-
-# Set up console logging (for terminal output)
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-console_handler.setLevel(logging.INFO)
-
-# Get the root logger and configure it
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-logger.addHandler(file_handler)
-logger.addHandler(console_handler)
 
 
 @app.route('/')
@@ -116,7 +89,7 @@ def update_lead(lead_id):
             return jsonify({"error": f"User was not updated\n{updated_lead}"}), 200
 
         logger.info(f"User was updated\n{updated_lead}")
-        return jsonify({"Lead successfully updated": f"{updated_lead}"}), 201
+        return jsonify({"Lead successfully updated": f"{updated_lead}"}), 200
     except ValidationError as err:
         send_slack_notification("Validation Error while updating lead\n" + str(err))
         logger.error("Validation Error while updating lead\n" + str(err))
@@ -204,4 +177,5 @@ def create_task():
 
 
 if __name__ == '__main__':
+    logger.info("Starting app")
     app.run()
