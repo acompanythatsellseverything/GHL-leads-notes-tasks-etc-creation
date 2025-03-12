@@ -11,13 +11,13 @@ class EmailSchema(Schema):
 
 
 class PhoneSchema(Schema):
-    value = fields.Str(required=True)
+    value = fields.Str()
 
 
 class PersonSchema(Schema):
     id = fields.Int()
     firstName = fields.Str(required=True)
-    lastName = fields.Str(required=True)
+    lastName = fields.Str()
     addresses = fields.List(fields.Nested(AddressSchema))
     customMLSNumber = fields.Str()
     customListingType = fields.Str()
@@ -34,7 +34,7 @@ class PersonSchema(Schema):
     customBuyerProfileFB4S = fields.Url()
     customAssignedNotFromWillowAt = fields.Str()
     emails = fields.List(fields.Nested(EmailSchema), required=True)
-    phones = fields.List(fields.Nested(PhoneSchema), required=True)
+    phones = fields.List(fields.Nested(PhoneSchema))
     tags = fields.List(fields.Str())
 
 
@@ -49,8 +49,8 @@ class PropertySchema(Schema):
 
 class PostLeadSchema(Schema):
     person = fields.Nested(PersonSchema, required=True)
-    property = fields.Nested(PropertySchema, required=True)
-    type = fields.Str(required=True)
+    property = fields.Nested(PropertySchema)
+    type = fields.Str()
     source = fields.Str()
     system = fields.Str()
     description = fields.Str()
