@@ -86,6 +86,7 @@ def create_lead():
 
     except ValidationError as err:
         send_slack_notification("Validation Error while creating lead\n" + str(err))
+        logger.error("Validation Error while creating lead\n" + str(err))
         return jsonify({"validation error": err.messages}), 400
 
     except Exception as e:
@@ -140,6 +141,10 @@ def get_lead_by_email():
         send_slack_notification("Validation Error while getting lead\n" + str(err))
         logger.error("Validation Error while getting lead\n" + str(err))
         return jsonify({"validation error": err.messages}), 400
+    except Exception as e:
+        send_slack_notification("Error while getting lead\n" + str(e))
+        logger.error("Error while getting lead\n" + str(e))
+        return jsonify({"Error while getting lead\n": e}), 400
     lead_email = validated_data.get("email")
     ghl_id = _get_lead_by_email(lead_email)
     if ghl_id is False:
@@ -160,6 +165,10 @@ def get_user_by_email():
         send_slack_notification("Validation Error while getting lead\n" + str(err))
         logger.error("Validation Error while getting lead\n" + str(err))
         return jsonify({"validation error": err.messages}), 400
+    except Exception as e:
+        send_slack_notification("Error while getting lead\n" + str(e))
+        logger.error("Error while getting a user\n" + str(e))
+        return jsonify({"Error while getting a user\n": e}), 400
     if team_member_id is False:
         return jsonify({"message": f"There is no such user with email = {lookup_email}"}), 200
     return jsonify({"user_id": team_member_id}), 200
