@@ -55,14 +55,19 @@ def create_lead():
             return jsonify({"error": f"User was not created\n{lead}"}), 200
 
         logger.info(f"User was created\n{lead}")
-        return jsonify({"Lead successfully created": f"{lead}"}), 201
+        return jsonify(
+            {
+                "message": "Lead successfully created",
+                "contact": lead.get("contact")
+            }
+        ), 201
 
-    except ValidationError as err:
+    except ValidationError as err:  # Handling Validation Error
         send_slack_notification("Validation Error while creating lead\n" + str(err))
         logger.error("Validation Error while creating lead\n" + str(err))
         return jsonify({"validation error": err.messages}), 400
 
-    except Exception as e:
+    except Exception as e:  # Handling any other Error
         error_msg = traceback.format_exc()
         send_slack_notification("Error while creating lead\n" + str(e) + "\n" + str(error_msg))
         logger.error("Error while creating lead\n" + str(e) + "\n" + str(error_msg))
