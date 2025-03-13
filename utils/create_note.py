@@ -32,5 +32,6 @@ def create_lead_property_inquiry(ghl_id: str, data: dict):
     response = requests.post(BASE_NOTES_URL + ghl_id + "/notes", json=note_payload, headers=HEADERS)
     response = response.json()
     logger.info(f"inquiry response\n{response}")
+    return response
 
 
