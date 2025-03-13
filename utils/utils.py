@@ -18,9 +18,9 @@ LOOKUP_USER_URL = "https://rest.gohighlevel.com/v1/users/"
 def _get_lead_by_email(email):
     response = requests.get(LOOKUP_LEAD_URL + email, headers=HEADERS)
     if response.json().get("contacts"):
-        ghl_id = response.json().get("contacts")[0].get("id")
-        logger.info(f"Found lead id by email {email}: {ghl_id}")
-        return ghl_id
+        contact = response.json().get("contacts")[0]
+        logger.info(f"Found lead id by email {email}: {contact}")
+        return contact
     logger.info(f"Lead by email {email} was not found")
     return False
 
@@ -31,6 +31,6 @@ def _get_user_by_email(email):
         for user in response.json().get("users"):
             if user.get("email") == email:
                 logger.info(f"Found user by email {email}: {user}")
-                return user.get("id")
+                return user
     logger.info(f"User with email:{email} was not found")
     return False
