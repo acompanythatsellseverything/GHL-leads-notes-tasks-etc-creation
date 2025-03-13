@@ -46,13 +46,15 @@ def create_lead():
 
     # create lead block _______________________________________
     try:
+        #  Validate data and check if property is in payload
         validated_data = post_lead_schema.load(request.json)
+        has_property = 'property' in validated_data
 
-        lead = create_ghl_lead(validated_data)
+        lead = create_ghl_lead(validated_data, has_property)
 
         if not lead.get("contact"):
             logger.info(f"User was not created\n{lead}")
-            return jsonify({"error": f"User was not created\n{lead}"}), 200
+            return jsonify({"message": f"User was not created", "contact": lead}), 200
 
         logger.info(f"User was created\n{lead}")
         return jsonify(

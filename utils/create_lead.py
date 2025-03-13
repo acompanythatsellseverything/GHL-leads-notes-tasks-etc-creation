@@ -18,15 +18,16 @@ LOOKUP_BASE_URL = "https://rest.gohighlevel.com/v1/contacts/lookup?email="
 
 
 # Check if such contact already exists in GHL
-def ghl_contact_lookup(data):
+def ghl_contact_lookup(data, has_property):
     lookup_email = data["person"]["emails"][0].get("value")
     response = requests.get(LOOKUP_BASE_URL + lookup_email, headers=HEADERS)
     logger.info(f"contact look up response\n{response.json()}")
 
     if response.json().get("contacts"):
-        # If contact already exists in GHL - create only note (Property Inquiry)
-        ghl_id = response.json().get("contacts")[0].get("id")
-        create_lead_property_inquiry(ghl_id, data)
+        # If contact already exists in GHL and payload contains property - create only note (Property Inquiry)
+        if has_property:
+            ghl_id = response.json().get("contacts")[0].get("id")
+            create_lead_property_inquiry(ghl_id, data)
         return True
     return False
 
@@ -35,7 +36,7 @@ def ghl_contact_lookup(data):
 def prepare_json_data_for_ghl(data: dict) -> dict:
     result = {}
     person_data = data["person"]
-    property_data = data["property"]
+    property_data = data.get("property", {})
     result["email"] = person_data["emails"][0].get("value")
     result["phone"] = person_data["phones"][0].get("value")
     result["firstName"] = person_data.get("firstName")
@@ -52,7 +53,7 @@ def prepare_json_data_for_ghl(data: dict) -> dict:
         "5k6Sn4LgOC109kGbPKXA": person_data.get("customFB4SInquiriesCounter"),  # FB4S Inquiries Counter
         "3kOQc4txrHj7dledzdNJ": person_data.get("customMLSNumber"),  # MLS Number
         "KUpiQ32dAm11q4gu9MB1": person_data.get("customChromeExtensionLink"),  # Chrome Extension Link
-        "ULUCaQYI9uurYn8mfpu9": property_data.get("url"),  # Listing URL
+        "ULUCaQYI9uurYn8mfpu9": property_data.get("url", "N/A"),  # Listing URL
         "2C3PcAa0JdOHRu95mWzp": person_data.get("customListingURLPath"),  # Listing URL Path
         "pwwHyq93djePQzzMECFI": person_data.get("customAssignedNotFromWillowAt"),  # Assigned Not From Willow At
         "01MYfI09Z919mFibcZNG": person_data.get("customExpectedPriceRange"),  # Expected Price Range
@@ -63,14 +64,15 @@ def prepare_json_data_for_ghl(data: dict) -> dict:
     return result
 
 
-def create_ghl_lead(data):
-    existing_lead = ghl_contact_lookup(data)
+def create_ghl_lead(data, has_property):
+    existing_lead = ghl_contact_lookup(data, has_property)
     if existing_lead:
-        return {"issue": "User already exists, inquiry added"}
+        return {"issue": "User already exists, inquiry added if provided"}
     else:
-        # if there is now such lead in GHL - create a lead and note(Property Inquiry)
+        # if there is no such lead in GHL - create a lead and if payload contains property create note(Property Inquiry)
         prepared_ghl_json = prepare_json_data_for_ghl(data)
         response = requests.post(CREATE_LEAD_BASE_URL, json=prepared_ghl_json, headers=HEADERS)
-        ghl_id = response.json().get("contact").get("id")
-        create_lead_property_inquiry(ghl_id, data)
+        if has_property:
+            ghl_id = response.json().get("contact").get("id")
+            create_lead_property_inquiry(ghl_id, data)
         return response.json()
