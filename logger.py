@@ -7,6 +7,15 @@ log_directory = "logs"
 if not os.path.exists(log_directory):
     os.makedirs(log_directory)
 
+
+class AjaxFilter(logging.Filter):
+    def filter(self, record):
+        return "health" not in record.getMessage()
+
+
+log = logging.getLogger('werkzeug')
+log.addFilter(AjaxFilter())
+
 # Log file path
 log_file = os.path.join(log_directory, "app.log")
 
