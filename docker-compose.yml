@@ -9,4 +9,6 @@ services:
       - .env
     volumes:
       - .:/app  # Syncs local code changes with the container
+      - /var/run/docker.sock:/var/run/docker.sock  # Allows Docker commands inside the container
+      - /var/run/docker:/var/run/docker
     restart: always
