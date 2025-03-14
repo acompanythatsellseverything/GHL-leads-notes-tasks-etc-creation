@@ -193,7 +193,7 @@ def add_notes_to_lead(lead_id):
     try:
         lead = create_lead_property_inquiry(ghl_id=lead_id, data=request.json)
         logger.info("Note added successfully")
-        return jsonify({"data": lead})
+        return jsonify({"data": lead}), 201
 
     except Exception as e:
         error_msg = traceback.format_exc()
