@@ -21,7 +21,7 @@ EXPOSE 5007
 RUN chmod +x /app/docker_health_monitor.sh
 
 # Define the health check for Docker
-HEALTHCHECK --interval=5s --timeout=5s --retries=3 CMD curl -f http://localhost:5007/healthh || exit 1
+HEALTHCHECK --interval=45s --timeout=10s --retries=3 CMD curl -f http://localhost:5007/health || exit 1
 
 # Start both Flask and the monitoring script
 CMD ["/bin/sh", "-c", "/app/docker_health_monitor.sh & flask run --host=0.0.0.0 --port=5007"]
