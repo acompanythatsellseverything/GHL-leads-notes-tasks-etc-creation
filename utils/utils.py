@@ -13,6 +13,16 @@ HEADERS = {'Authorization': f'Bearer {GHL_API_KEY}'}
 
 LOOKUP_LEAD_URL = "https://rest.gohighlevel.com/v1/contacts/lookup?email="
 LOOKUP_USER_URL = "https://rest.gohighlevel.com/v1/users/"
+CONTACT_URL = "https://rest.gohighlevel.com/v1/contacts/"
+
+
+def _get_lead_by_id(ghl_id):
+    response = requests.get(CONTACT_URL + ghl_id, headers=HEADERS)
+    if response.json().get("contact"):
+        contact = response.json().get("contact")
+        logger.info(f"Found lead by id: {contact}")
+        return contact
+    raise LookupError(f"Could not find lead by id: {ghl_id}")
 
 
 def _get_lead_by_email(email):

@@ -10,6 +10,7 @@ from marshmallow import ValidationError
 from utils.add_tags import add_tags
 from utils.create_lead import create_ghl_lead
 from utils.create_note import create_lead_property_inquiry
+from utils.create_tasks import create_task
 from utils.update_lead import _update_lead
 from utils.slack_troubleshooting import send_slack_notification
 from utils.utils import _get_lead_by_email, _get_user_by_email
@@ -187,7 +188,7 @@ def add_notes_to_lead(lead_id):
 
     if provided_key != API_KEY:
         return jsonify({"error": "Unauthorized"}), 401
-    logger.info(f"Received tags payload:\n{request.json}")
+    logger.info(f"Received notes payload:\n{request.json}")
 
     try:
         lead = create_lead_property_inquiry(ghl_id=lead_id, data=request.json)
@@ -201,13 +202,22 @@ def add_notes_to_lead(lead_id):
         return jsonify({"message": f"error: {e}"}), 400
 
 
-@app.route('/task', methods=['POST'])
-def create_task():
+@app.route('/lead/<string:lead_id>/tasks', methods=['POST'])
+def create_task_endpoint(lead_id):
     provided_key = request.headers.get("X-API-KEY")
 
     if provided_key != API_KEY:
         return jsonify({"error": "Unauthorized"}), 401
-    return jsonify({"tasks": "under development"}), 200
+
+    logger.info(f"Received task payload:\n{request.json}")
+    try:
+        lead_task = create_task(lead_id, request.json)
+    except Exception as e:
+        error_msg = traceback.format_exc()
+        send_slack_notification("Error while adding task\n" + str(e) + "\n" + str(error_msg))
+        logger.error("Error while adding task\n" + str(e) + "\n" + str(error_msg))
+        return jsonify({"message": f"error: {e}"}), 400
+    return jsonify({"tasks": lead_task}), 200
 
 
 if __name__ == '__main__':
