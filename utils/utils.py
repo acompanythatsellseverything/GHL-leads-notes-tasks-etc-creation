@@ -22,7 +22,7 @@ def _get_lead_by_id(ghl_id):
         contact = response.json().get("contact")
         logger.info(f"Found lead by id: {contact}")
         return contact
-    raise LookupError(f"Could not find lead by id: {ghl_id}")
+    return False
 
 
 def _get_lead_by_email(email):

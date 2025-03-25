@@ -13,7 +13,7 @@ from utils.create_note import create_lead_property_inquiry
 from utils.create_tasks import create_task
 from utils.update_lead import _update_lead
 from utils.slack_troubleshooting import send_slack_notification
-from utils.utils import _get_lead_by_email, _get_user_by_email
+from utils.utils import _get_lead_by_email, _get_user_by_email, _get_lead_by_id
 from validation.get_lead_validation import get_lead_by_email_schema
 from validation.create_lead_validation import PostLeadSchema, post_lead_schema
 from validation.update_lead_validation import update_lead_schema
@@ -137,6 +137,23 @@ def get_lead_by_email():
         return jsonify({"Error while getting lead\n": e}), 400
     if lead is False:
         return jsonify({"message": f"There is no such contact with email = {lead_email}"}), 200
+    return jsonify({"lead": lead}), 200
+
+
+@app.route('/get_lead/<string:lead_id>', methods=['GET'])
+def get_lead_by_id(lead_id):
+    provided_key = request.headers.get("X-API-KEY")
+    if provided_key != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    logger.info(f"Received get lead by id request. Lead id is {lead_id}")
+    try:
+        lead = _get_lead_by_id(lead_id)
+    except Exception as e:
+        send_slack_notification("Error while getting lead by id\n" + str(e))
+        logger.error("Error while getting lead by id\n" + str(e))
+        return jsonify({"Error while getting lead by id\n": e}), 400
+    if lead is False:
+        return jsonify({"message": f"There is no such contact with id = {lead_id}"}), 200
     return jsonify({"lead": lead}), 200
 
 
