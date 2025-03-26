@@ -27,6 +27,7 @@ class PersonSchema(Schema):
     customFB4SLeadID = fields.Str()
     customFB4SRCAURL = fields.Url()
     customListingURL = fields.Url()
+    customListingURLPath = fields.Url()
     customParentCategory = fields.Str()
     customAbandonedPondReason = fields.Str()
     customChromeExtensionLink = fields.Url()
@@ -45,6 +46,7 @@ class PropertySchema(Schema):
     code = fields.Str()
     mlsNumber = fields.Str()
     url = fields.Url()
+    price = fields.Int()
 
 
 class PostLeadSchema(Schema):
