@@ -15,7 +15,7 @@ class PhoneSchema(Schema):
 
 
 class PersonSchema(Schema):
-    id = fields.Int()
+    id = fields.Str()
     firstName = fields.Str()
     lastName = fields.Str()
     assignedUserId = fields.Str()
