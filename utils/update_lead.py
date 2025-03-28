@@ -1,7 +1,6 @@
 import os
 
 import requests
-import logging
 
 from dotenv import load_dotenv
 
@@ -73,7 +72,11 @@ def prepare_lead_data(data: dict) -> dict:
     return lead_data
 
 
-def _update_lead(data: dict, ghl_id: str) -> dict:
+def _update_lead(data: dict, ghl_id: str):
     prepared_lead_data = prepare_lead_data(data)
     response = requests.put(UPDATE_BASE_URL + ghl_id, headers=HEADERS, json=prepared_lead_data)
-    return response.json()
+    contact = response.json().get("contact")
+    if contact:
+        return contact
+    return False
+

@@ -60,9 +60,9 @@ def create_lead():
 
         lead = create_ghl_lead(validated_data, has_property)
 
-        if not lead.get("contact"):
+        if not lead:
             logger.info(f"User was not created\n{lead}")
-            return jsonify({"message": f"User was not created", "contact": lead}), 200
+            return jsonify({"message": f"User was not created, already exists. Added inquiry note if provided", "contact": lead}), 200
 
         logger.info(f"User was created\n{lead}")
         return jsonify(
@@ -75,13 +75,13 @@ def create_lead():
     except ValidationError as err:  # Handling Validation Error
         send_slack_notification("Validation Error while creating lead\n" + str(err))
         logger.error("Validation Error while creating lead\n" + str(err))
-        return jsonify({"validation error": err.messages}), 400
+        return jsonify({"message": f"Validation error {err.messages}", "contact": None}), 406
 
     except Exception as e:  # Handling any other Error
         error_msg = traceback.format_exc()
         send_slack_notification("Error while creating lead\n" + str(e) + "\n" + str(error_msg))
         logger.error("Error while creating lead\n" + str(e) + "\n" + str(error_msg))
-        return jsonify({"message": f"error: {e}"}), 400
+        return jsonify({"message": f"error: {e}", "contact": None}), 400
     # end create lead block ___________________________________________
 
 
@@ -99,21 +99,20 @@ def update_lead(lead_id):
     try:
         validated_data = update_lead_schema.load(request.json)
         updated_lead = _update_lead(validated_data, lead_id)
-        if not updated_lead.get("contact"):
-            logger.info(f"User was not updated\n{updated_lead}")
-            return jsonify({"error": f"User was not updated\n{updated_lead}"}), 200
-
-        logger.info(f"User was updated\n{updated_lead}")
-        return jsonify({"Lead successfully updated": f"{updated_lead}"}), 200
+        logger.info(f"{updated_lead}")
+        if not updated_lead:
+            logger.info(f"User was not updated")
+            return jsonify({"message": f"User was not updated", "contact": None}), 202
     except ValidationError as err:
         send_slack_notification("Validation Error while updating lead\n" + str(err))
         logger.error("Validation Error while updating lead\n" + str(err))
-        return jsonify({"validation error while updating lead": err.messages}), 400
+        return jsonify({"message": f"Validation error while updating lead {err.messages}", "contact": None}), 406
     except Exception as e:
         error_msg = traceback.format_exc()
         send_slack_notification("Error while updating lead\n" + str(e) + "\n" + str(error_msg))
         logger.error("Error while updating lead\n" + str(e) + "\n" + str(error_msg))
-        return jsonify({"message": f"error: {e}"}), 400
+        return jsonify({"message": f"Error: {e}", "contact": None}), 400
+    return jsonify({"contact": updated_lead, "message": "Lead is successfully updated"}), 200
     # end update lead block ______________________________
 
 
@@ -130,14 +129,14 @@ def get_lead_by_email():
     except ValidationError as err:
         send_slack_notification("Validation Error while getting lead\n" + str(err))
         logger.error("Validation Error while getting lead\n" + str(err))
-        return jsonify({"validation error": err.messages}), 400
+        return jsonify({"message": f"Validation error {err.messages}", "contact": None}), 406
     except Exception as e:
         send_slack_notification("Error while getting lead\n" + str(e))
         logger.error("Error while getting lead\n" + str(e))
-        return jsonify({"Error while getting lead\n": e}), 400
-    if lead is False:
-        return jsonify({"message": f"There is no such contact with email = {lead_email}"}), 200
-    return jsonify({"lead": lead}), 200
+        return jsonify({"message": f"Error while getting lead {e}", "contact": None}), 400
+    if not lead:
+        return jsonify({"message": f"There is no such contact with email = {lead_email}", "contact": None}), 202
+    return jsonify({"message": "Successfully get lead by email","contact": lead}), 200
 
 
 @app.route('/get_lead/<string:lead_id>', methods=['GET'])
@@ -151,10 +150,10 @@ def get_lead_by_id(lead_id):
     except Exception as e:
         send_slack_notification("Error while getting lead by id\n" + str(e))
         logger.error("Error while getting lead by id\n" + str(e))
-        return jsonify({"Error while getting lead by id\n": e}), 400
+        return jsonify({"message": f"Error while getting lead by id {e}", "contact": None}), 400
     if lead is False:
-        return jsonify({"message": f"There is no such contact with id = {lead_id}"}), 200
-    return jsonify({"lead": lead}), 200
+        return jsonify({"message": f"There is no such contact with id = {lead_id}", "contact": None}), 202
+    return jsonify({"message": "Successfully get lead by id", "contact": lead}), 200
 
 
 @app.route('/get_user', methods=['POST'])
@@ -169,14 +168,14 @@ def get_user_by_email():
     except ValidationError as err:
         send_slack_notification("Validation Error while getting lead\n" + str(err))
         logger.error("Validation Error while getting lead\n" + str(err))
-        return jsonify({"validation error": err.messages}), 400
+        return jsonify({"message": f"Validation error {err.messages}", "user": None}), 406
     except Exception as e:
         send_slack_notification("Error while getting lead\n" + str(e))
         logger.error("Error while getting a user\n" + str(e))
-        return jsonify({"Error while getting a user\n": e}), 400
+        return jsonify({"message": f"Error while getting a user {e}", "user": None}), 400
     if team_member is False:
-        return jsonify({"message": f"There is no such user with email = {lookup_email}"}), 200
-    return jsonify({"user": team_member}), 200
+        return jsonify({"message": f"There is no such user with email = {lookup_email}", "user": None}), 202
+    return jsonify({"message": "Successfully get user by email", "user": team_member}), 200
 
 
 @app.route('/lead/<string:lead_id>/tags', methods=['PATCH'])
@@ -190,13 +189,13 @@ def add_tag_to_lead(lead_id):
     try:
         lead = add_tags(ghl_id=lead_id, tags_to_add=request.json)
         logger.info("Tags added successfully")
-        return jsonify({"data": lead})
+        return jsonify({"message": "Tags added successfully", "contact": lead}), 201
 
     except Exception as e:
         error_msg = traceback.format_exc()
         send_slack_notification("Error while adding tags\n" + str(e) + "\n" + str(error_msg))
         logger.error("Error while adding tags\n" + str(e) + "\n" + str(error_msg))
-        return jsonify({"message": f"error: {e}"}), 400
+        return jsonify({"message": f"Error: {e}", "contact": None}), 400
 
 
 @app.route('/lead/<string:lead_id>/notes', methods=['POST'])
@@ -208,15 +207,15 @@ def add_notes_to_lead(lead_id):
     logger.info(f"Received notes payload:\n{request.json}")
 
     try:
-        lead = create_lead_property_inquiry(ghl_id=lead_id, data=request.json)
+        note = create_lead_property_inquiry(ghl_id=lead_id, data=request.json)
         logger.info("Note added successfully")
-        return jsonify({"data": lead}), 201
+        return jsonify({"note": note, "message": "Note added successfully"}), 201
 
     except Exception as e:
         error_msg = traceback.format_exc()
         send_slack_notification("Error while adding tags\n" + str(e) + "\n" + str(error_msg))
         logger.error("Error while adding tags\n" + str(e) + "\n" + str(error_msg))
-        return jsonify({"message": f"error: {e}"}), 400
+        return jsonify({"message": f"error: {e}", "note": None}), 400
 
 
 @app.route('/lead/<string:lead_id>/tasks', methods=['POST'])
@@ -233,8 +232,8 @@ def create_task_endpoint(lead_id):
         error_msg = traceback.format_exc()
         send_slack_notification("Error while adding task\n" + str(e) + "\n" + str(error_msg))
         logger.error("Error while adding task\n" + str(e) + "\n" + str(error_msg))
-        return jsonify({"message": f"error: {e}"}), 400
-    return jsonify({"tasks": lead_task}), 200
+        return jsonify({"message": f"error: {e}", "task": None}), 400
+    return jsonify({"task": lead_task, "message": "Task added successfully"}), 200
 
 
 if __name__ == '__main__':

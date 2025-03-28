@@ -67,7 +67,7 @@ def prepare_json_data_for_ghl(data: dict) -> dict:
 def create_ghl_lead(data, has_property):
     existing_lead = ghl_contact_lookup(data, has_property)
     if existing_lead:
-        return {"issue": "User already exists, inquiry added if provided"}
+        return None
     else:
         # if there is no such lead in GHL - create a lead and if payload contains property create note(Property Inquiry)
         prepared_ghl_json = prepare_json_data_for_ghl(data)
