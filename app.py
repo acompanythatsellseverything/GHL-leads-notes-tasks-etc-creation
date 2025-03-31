@@ -1,4 +1,3 @@
-import logging
 import os
 import traceback
 from logger import logger
@@ -14,8 +13,11 @@ from utils.create_tasks import create_task
 from utils.update_lead import _update_lead
 from utils.slack_troubleshooting import send_slack_notification
 from utils.utils import _get_lead_by_email, _get_user_by_email, _get_lead_by_id
+from validation.add_tags_validation import tags_validation
 from validation.get_lead_validation import get_lead_by_email_schema
-from validation.create_lead_validation import PostLeadSchema, post_lead_schema
+from validation.create_lead_validation import post_lead_schema
+from validation.notes_validation import notes_validation
+from validation.task_validation import task_validation
 from validation.update_lead_validation import update_lead_schema
 
 app = Flask(__name__)
@@ -187,15 +189,22 @@ def add_tag_to_lead(lead_id):
     logger.info(f"Received tags payload:\n{request.json}")
 
     try:
-        lead = add_tags(ghl_id=lead_id, tags_to_add=request.json)
+        validated_data = tags_validation(request.json)
+        lead = add_tags(ghl_id=lead_id, tags_to_add=validated_data)
         logger.info("Tags added successfully")
-        return jsonify({"message": "Tags added successfully", "contact": lead}), 201
+
+    except ValidationError as err:
+        send_slack_notification("Validation Error while adding tags\n" + str(err))
+        logger.error("Validation Error while adding tags\n" + str(err))
+        return jsonify({"message": f"Validation error {err.messages}", "user": None}), 406
 
     except Exception as e:
         error_msg = traceback.format_exc()
         send_slack_notification("Error while adding tags\n" + str(e) + "\n" + str(error_msg))
         logger.error("Error while adding tags\n" + str(e) + "\n" + str(error_msg))
         return jsonify({"message": f"Error: {e}", "contact": None}), 400
+
+    return jsonify({"message": "Tags added successfully", "contact": lead}), 201
 
 
 @app.route('/lead/<string:lead_id>/notes', methods=['POST'])
@@ -207,9 +216,15 @@ def add_notes_to_lead(lead_id):
     logger.info(f"Received notes payload:\n{request.json}")
 
     try:
-        note = create_lead_property_inquiry(ghl_id=lead_id, data=request.json)
+        validated_data = notes_validation.load(request.json)
+        note = create_lead_property_inquiry(ghl_id=lead_id, data=validated_data)
         logger.info("Note added successfully")
         return jsonify({"note": note, "message": "Note added successfully"}), 201
+
+    except ValidationError as err:
+        send_slack_notification("Validation Error while adding notes\n" + str(err))
+        logger.error("Validation Error while adding notes\n" + str(err))
+        return jsonify({"message": f"Validation error {err.messages}", "note": None}), 406
 
     except Exception as e:
         error_msg = traceback.format_exc()
@@ -227,12 +242,20 @@ def create_task_endpoint(lead_id):
 
     logger.info(f"Received task payload:\n{request.json}")
     try:
-        lead_task = create_task(lead_id, request.json)
+        validated_data = task_validation.load(request.json)
+        lead_task = create_task(lead_id, validated_data)
+
+    except ValidationError as err:
+        send_slack_notification("Validation Error while adding task\n" + str(err))
+        logger.error("Validation Error while adding task\n" + str(err))
+        return jsonify({"message": f"Validation error {err.messages}", "task": None}), 406
+
     except Exception as e:
         error_msg = traceback.format_exc()
         send_slack_notification("Error while adding task\n" + str(e) + "\n" + str(error_msg))
         logger.error("Error while adding task\n" + str(e) + "\n" + str(error_msg))
         return jsonify({"message": f"error: {e}", "task": None}), 400
+
     return jsonify({"task": lead_task, "message": "Task added successfully"}), 200
 
 
