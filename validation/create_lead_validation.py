@@ -57,6 +57,7 @@ class PostLeadSchema(Schema):
     system = fields.Str()
     description = fields.Str()
     message = fields.Str()
+    selected_realtor_email = fields.Email()
 
 
 post_lead_schema = PostLeadSchema()
