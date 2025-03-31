@@ -7,7 +7,9 @@
   },
   "host": "3.98.147.51:5007",
   "basePath": "/",
-  "schemes": ["http"],
+  "schemes": [
+    "http"
+  ],
   "securityDefinitions": {
     "ApiKeyAuth": {
       "type": "apiKey",
@@ -20,7 +22,11 @@
       "post": {
         "summary": "Create a new lead or add a new inquiry note",
         "description": "Creates a lead in the GHL system. If it already exists, adds an inquiry note",
-        "security": [{"ApiKeyAuth": []}],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "body",
@@ -32,68 +38,328 @@
                 "person": {
                   "type": "object",
                   "properties": {
-                    "id": {"type": "integer"},
-                    "firstName": {"type": "string"},
-                    "lastName": {"type": "string"},
+                    "id": {
+                      "type": "integer"
+                    },
+                    "firstName": {
+                      "type": "string"
+                    },
+                    "lastName": {
+                      "type": "string"
+                    },
                     "addresses": {
                       "type": "array",
                       "items": {
                         "type": "object",
                         "properties": {
-                          "city": {"type": "string"},
-                          "state": {"type": "string"}
+                          "city": {
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string"
+                          }
                         }
                       }
                     },
-                    "customMLSNumber": {"type": "string"},
-                    "customListingType": {"type": "string"},
-                    "customAddress": {"type": "string"},
-                    "customCity": {"type": "string"},
-                    "customProvince": {"type": "string"},
-                    "customFB4SLeadID": {"type": "string"},
-                    "customFB4SRCAURL": {"type": "string"},
-                    "customFB4SInquiriesCounter": {"type": "string"},
-                    "customChromeExtensionLink": {"type": "string"},
-                    "customListingURLPath": {"type": "string"},
-                    "customExpectedPriceRange": {"type": "string"},
-                    "customBuyerProfileFB4S": {"type": "string"},
-                    "customAssignedNotFromWillowAt": {"type": "string"},
+                    "customMLSNumber": {
+                      "type": "string"
+                    },
+                    "customListingType": {
+                      "type": "string"
+                    },
+                    "customAddress": {
+                      "type": "string"
+                    },
+                    "customCity": {
+                      "type": "string"
+                    },
+                    "customProvince": {
+                      "type": "string"
+                    },
+                    "customFB4SLeadID": {
+                      "type": "string"
+                    },
+                    "customFB4SRCAURL": {
+                      "type": "string"
+                    },
+                    "customFB4SInquiriesCounter": {
+                      "type": "string"
+                    },
+                    "customChromeExtensionLink": {
+                      "type": "string"
+                    },
+                    "customListingURLPath": {
+                      "type": "string"
+                    },
+                    "customExpectedPriceRange": {
+                      "type": "string"
+                    },
+                    "customBuyerProfileFB4S": {
+                      "type": "string"
+                    },
+                    "customAssignedNotFromWillowAt": {
+                      "type": "string"
+                    },
                     "emails": {
                       "type": "array",
-                      "items": {"type": "object", "properties": {"value": {"type": "string"}}}
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "string"
+                          }
+                        }
+                      }
                     },
                     "phones": {
                       "type": "array",
-                      "items": {"type": "object", "properties": {"value": {"type": "string"}}}
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "string"
+                          }
+                        }
+                      }
                     },
-                    "tags": {"type": "array", "items": {"type": "string"}}
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
                   }
                 },
                 "property": {
                   "type": "object",
                   "properties": {
-                    "street": {"type": "string"},
-                    "city": {"type": "string"},
-                    "state": {"type": "string"},
-                    "code": {"type": "string"},
-                    "mlsNumber": {"type": "string"},
-                    "url": {"type": "string"}
+                    "street": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "mlsNumber": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
                   }
                 },
-                "type": {"type": "string"},
-                "source": {"type": "string"},
-                "system": {"type": "string"},
-                "description": {"type": "string"},
-                "message": {"type": "string"}
+                "type": {
+                  "type": "string"
+                },
+                "source": {
+                  "type": "string"
+                },
+                "system": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
               },
-              "required": ["person"]
+              "required": [
+                "person"
+              ]
             }
           }
         ],
         "responses": {
-          "201": {"description": "Lead successfully created"},
-          "400": {"description": "Error creating lead"},
-          "401": {"description": "Unauthorized"}
+          "201": {
+            "description": "Lead successfully created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Lead successfully created"
+                },
+                "contact": {
+                  "type": "object",
+                  "properties": {
+                    "city": {
+                      "type": "string",
+                      "example": "N/A"
+                    },
+                    "country": {
+                      "type": "string",
+                      "example": "CA"
+                    },
+                    "customField": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "fieldValue": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "example": [
+                        {
+                          "fieldValue": "Laundromats",
+                          "id": "R3CCQhYeG4kZ5NSTW5vk"
+                        },
+                        {
+                          "fieldValue": "https://www.findbusinesses4sale.com/rca/eyJjaGF0X2lkIjoxODY0NSwiY29ubmVjdGlvbl9vd25lcl9pZCI6IjE4NzA1In0=/",
+                          "id": "F4Bkzj3AXKtBiri6S3Xe"
+                        }
+                      ]
+                    },
+                    "dateAdded": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2025-03-28T14:45:09.882Z"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "mconcha@burmanu.ca"
+                    },
+                    "emailLowerCase": {
+                      "type": "string",
+                      "example": "mconcha@burmanu.ca"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "example": "Sara"
+                    },
+                    "firstNameLowerCase": {
+                      "type": "string",
+                      "example": "sara"
+                    },
+                    "fullNameLowerCase": {
+                      "type": "string",
+                      "example": "sara olit"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "TBfGmIEsBVStLeBGAwiG"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "example": "Olit"
+                    },
+                    "lastNameLowerCase": {
+                      "type": "string",
+                      "example": "olit"
+                    },
+                    "locationId": {
+                      "type": "string",
+                      "example": "iCIim8m7X3EQyFY9rQ7H"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "example": "+17789800752"
+                    },
+                    "source": {
+                      "type": "string",
+                      "example": "FB4S"
+                    },
+                    "state": {
+                      "type": "string",
+                      "example": "N/A"
+                    },
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "fb4s"
+                      ]
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "lead"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "User was not created, but an inquiry note was added",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "User was not created, already exists. Added inquiry note if provided"
+                },
+                "contact": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Unauthorized"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Validation error in the request payload",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Validation error {'person': ['Missing data for required field.']}"
+                },
+                "contact": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "General error occurred while creating lead",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "error: Unexpected issue occurred"
+                },
+                "contact": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -101,7 +367,11 @@
       "put": {
         "summary": "Update an existing lead",
         "description": "Updates lead details using the lead ID.",
-        "security": [{"ApiKeyAuth": []}],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "body",
@@ -113,52 +383,290 @@
                 "person": {
                   "type": "object",
                   "properties": {
-                    "id": {"type": "integer"},
-                    "firstName": {"type": "string"},
-                    "lastName": {"type": "string"},
+                    "id": {
+                      "type": "integer"
+                    },
+                    "firstName": {
+                      "type": "string"
+                    },
+                    "lastName": {
+                      "type": "string"
+                    },
                     "addresses": {
                       "type": "array",
                       "items": {
                         "type": "object",
                         "properties": {
-                          "city": {"type": "string"},
-                          "state": {"type": "string"}
+                          "city": {
+                            "type": "string"
+                          },
+                          "state": {
+                            "type": "string"
+                          }
                         }
                       }
                     },
-                    "customMLSNumber": {"type": "string"},
-                    "customListingType": {"type": "string"},
-                    "customAddress": {"type": "string"},
-                    "customCity": {"type": "string"},
-                    "customProvince": {"type": "string"},
-                    "customFB4SLeadID": {"type": "string"},
-                    "customFB4SRCAURL": {"type": "string"},
-                    "customFB4SInquiriesCounter": {"type": "string"},
-                    "customBuyerProfileFB4S": {"type": "string"},
-                    "customChromeExtensionLink": {"type": "string"},
-                    "customListingURLPath": {"type": "string"},
-                    "customExpectedPriceRange": {"type": "string"},
-                    "customAssignedNotFromWillowAt": {"type": "string"},
+                    "customMLSNumber": {
+                      "type": "string"
+                    },
+                    "customListingType": {
+                      "type": "string"
+                    },
+                    "customAddress": {
+                      "type": "string"
+                    },
+                    "customCity": {
+                      "type": "string"
+                    },
+                    "customProvince": {
+                      "type": "string"
+                    },
+                    "customFB4SLeadID": {
+                      "type": "string"
+                    },
+                    "customFB4SRCAURL": {
+                      "type": "string"
+                    },
+                    "customFB4SInquiriesCounter": {
+                      "type": "string"
+                    },
+                    "customBuyerProfileFB4S": {
+                      "type": "string"
+                    },
+                    "customChromeExtensionLink": {
+                      "type": "string"
+                    },
+                    "customListingURLPath": {
+                      "type": "string"
+                    },
+                    "customExpectedPriceRange": {
+                      "type": "string"
+                    },
+                    "customAssignedNotFromWillowAt": {
+                      "type": "string"
+                    },
                     "emails": {
                       "type": "array",
-                      "items": {"type": "object", "properties": {"value": {"type": "string"}}}
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "string"
+                          }
+                        }
+                      }
                     },
                     "phones": {
                       "type": "array",
-                      "items": {"type": "object", "properties": {"value": {"type": "string"}}}
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "string"
+                          }
+                        }
+                      }
                     },
-                    "tags": {"type": "array", "items": {"type": "string"}}
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
                   }
                 }
               },
-              "required": ["person"]
+              "required": [
+                "person"
+              ]
             }
           }
         ],
         "responses": {
-          "201": {"description": "Lead successfully updated"},
-          "400": {"description": "Error updating lead"},
-          "401": {"description": "Unauthorized"}
+          "200": {
+            "description": "Lead is successfully updated",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Lead successfully updated"
+                },
+                "contact": {
+                  "type": "object",
+                  "properties": {
+                    "city": {
+                      "type": "string",
+                      "example": "N/A"
+                    },
+                    "country": {
+                      "type": "string",
+                      "example": "CA"
+                    },
+                    "customField": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "fieldValue": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "example": [
+                        {
+                          "fieldValue": "Laundromats",
+                          "id": "R3CCQhYeG4kZ5NSTW5vk"
+                        },
+                        {
+                          "fieldValue": "https://www.findbusinesses4sale.com/rca/eyJjaGF0X2lkIjoxODY0NSwiY29ubmVjdGlvbl9vd25lcl9pZCI6IjE4NzA1In0=/",
+                          "id": "F4Bkzj3AXKtBiri6S3Xe"
+                        }
+                      ]
+                    },
+                    "dateAdded": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2025-03-28T14:45:09.882Z"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "mconcha@burmanu.ca"
+                    },
+                    "emailLowerCase": {
+                      "type": "string",
+                      "example": "mconcha@burmanu.ca"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "example": "Sara"
+                    },
+                    "firstNameLowerCase": {
+                      "type": "string",
+                      "example": "sara"
+                    },
+                    "fullNameLowerCase": {
+                      "type": "string",
+                      "example": "sara olit"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "TBfGmIEsBVStLeBGAwiG"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "example": "Olit"
+                    },
+                    "lastNameLowerCase": {
+                      "type": "string",
+                      "example": "olit"
+                    },
+                    "locationId": {
+                      "type": "string",
+                      "example": "iCIim8m7X3EQyFY9rQ7H"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "example": "+17789800752"
+                    },
+                    "source": {
+                      "type": "string",
+                      "example": "FB4S"
+                    },
+                    "state": {
+                      "type": "string",
+                      "example": "N/A"
+                    },
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "fb4s"
+                      ]
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "lead"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "User was not updated",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "User was not updated"
+                },
+                "contact": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Unauthorized"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Validation error in the request payload",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Validation error {'person': ['Missing data for required field.']}"
+                },
+                "contact": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "General error occurred while updating lead",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error: Unexpected issue occurred"
+                },
+                "contact": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -166,7 +674,11 @@
       "post": {
         "summary": "Get lead by email",
         "description": "Retrieves a lead data based on email.",
-        "security": [{"ApiKeyAuth": []}],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "body",
@@ -175,15 +687,201 @@
             "schema": {
               "type": "object",
               "properties": {
-                "email": {"type": "string"}
+                "email": {
+                  "type": "string"
+                }
               },
-              "required": ["email"]
+              "required": [
+                "email"
+              ]
             }
           }
         ],
         "responses": {
-          "200": {"description": "Lead found"},
-          "401": {"description": "Unauthorized"}
+          "200": {
+            "description": "Retrieve lead by email",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Successfully get lead by email"
+                },
+                "contact": {
+                  "type": "object",
+                  "properties": {
+                    "city": {
+                      "type": "string",
+                      "example": "N/A"
+                    },
+                    "country": {
+                      "type": "string",
+                      "example": "CA"
+                    },
+                    "customField": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "fieldValue": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "example": [
+                        {
+                          "fieldValue": "Laundromats",
+                          "id": "R3CCQhYeG4kZ5NSTW5vk"
+                        },
+                        {
+                          "fieldValue": "https://www.findbusinesses4sale.com/rca/eyJjaGF0X2lkIjoxODY0NSwiY29ubmVjdGlvbl9vd25lcl9pZCI6IjE4NzA1In0=/",
+                          "id": "F4Bkzj3AXKtBiri6S3Xe"
+                        }
+                      ]
+                    },
+                    "dateAdded": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2025-03-28T14:45:09.882Z"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "mconcha@burmanu.ca"
+                    },
+                    "emailLowerCase": {
+                      "type": "string",
+                      "example": "mconcha@burmanu.ca"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "example": "Sara"
+                    },
+                    "firstNameLowerCase": {
+                      "type": "string",
+                      "example": "sara"
+                    },
+                    "fullNameLowerCase": {
+                      "type": "string",
+                      "example": "sara olit"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "TBfGmIEsBVStLeBGAwiG"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "example": "Olit"
+                    },
+                    "lastNameLowerCase": {
+                      "type": "string",
+                      "example": "olit"
+                    },
+                    "locationId": {
+                      "type": "string",
+                      "example": "iCIim8m7X3EQyFY9rQ7H"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "example": "+17789800752"
+                    },
+                    "source": {
+                      "type": "string",
+                      "example": "FB4S"
+                    },
+                    "state": {
+                      "type": "string",
+                      "example": "N/A"
+                    },
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "fb4s"
+                      ]
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "lead"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Lead was not found by this email",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "There is no such contact with email = john@doe.com"
+                },
+                "contact": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Unauthorized"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Validation error in the request payload",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Validation error {'person': ['Missing data for required field.']}"
+                },
+                "contact": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "General error occurred while getting lead by email",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error: Unexpected issue occurred"
+                },
+                "contact": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -191,10 +889,177 @@
       "get": {
         "summary": "Get lead by id",
         "description": "Retrieves a lead data based on id.",
-        "security": [{"ApiKeyAuth": []}],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "responses": {
-          "200": {"description": "Lead found"},
-          "401": {"description": "Unauthorized"}
+          "200": {
+            "description": "Retrieve lead by id",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Successfully get lead by id"
+                },
+                "contact": {
+                  "type": "object",
+                  "properties": {
+                    "city": {
+                      "type": "string",
+                      "example": "N/A"
+                    },
+                    "country": {
+                      "type": "string",
+                      "example": "CA"
+                    },
+                    "customField": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "fieldValue": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "example": [
+                        {
+                          "fieldValue": "Laundromats",
+                          "id": "R3CCQhYeG4kZ5NSTW5vk"
+                        },
+                        {
+                          "fieldValue": "https://www.findbusinesses4sale.com/rca/eyJjaGF0X2lkIjoxODY0NSwiY29ubmVjdGlvbl9vd25lcl9pZCI6IjE4NzA1In0=/",
+                          "id": "F4Bkzj3AXKtBiri6S3Xe"
+                        }
+                      ]
+                    },
+                    "dateAdded": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2025-03-28T14:45:09.882Z"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "mconcha@burmanu.ca"
+                    },
+                    "emailLowerCase": {
+                      "type": "string",
+                      "example": "mconcha@burmanu.ca"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "example": "Sara"
+                    },
+                    "firstNameLowerCase": {
+                      "type": "string",
+                      "example": "sara"
+                    },
+                    "fullNameLowerCase": {
+                      "type": "string",
+                      "example": "sara olit"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "TBfGmIEsBVStLeBGAwiG"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "example": "Olit"
+                    },
+                    "lastNameLowerCase": {
+                      "type": "string",
+                      "example": "olit"
+                    },
+                    "locationId": {
+                      "type": "string",
+                      "example": "iCIim8m7X3EQyFY9rQ7H"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "example": "+17789800752"
+                    },
+                    "source": {
+                      "type": "string",
+                      "example": "FB4S"
+                    },
+                    "state": {
+                      "type": "string",
+                      "example": "N/A"
+                    },
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "fb4s"
+                      ]
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "lead"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Lead was not found by this id",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "There is no such contact with id = gHmgQjd5ffGdgb2"
+                },
+                "contact": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Unauthorized"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "General error occurred while getting lead by id",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error while getting lead by id 'error'"
+                },
+                "contact": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -202,7 +1067,11 @@
       "post": {
         "summary": "Get user(team member) by email",
         "description": "Retrieves lead data based on email.",
-        "security": [{"ApiKeyAuth": []}],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "body",
@@ -211,15 +1080,296 @@
             "schema": {
               "type": "object",
               "properties": {
-                "email": {"type": "string"}
+                "email": {
+                  "type": "string"
+                }
               },
-              "required": ["email"]
+              "required": [
+                "email"
+              ]
             }
           }
         ],
         "responses": {
-          "200": {"description": "user found"},
-          "401": {"description": "Unauthorized"}
+          "200": {
+            "description": "Successfully retrieved user by email",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Successfully get user by email"
+                },
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "format": "email",
+                      "example": "John@doe.com"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "example": "John"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "Fo7TmuqGrWqeeeno34t"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "example": "Doe"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "John Doe"
+                    },
+                    "permissions": {
+                      "type": "object",
+                      "properties": {
+                        "adPublishingEnabled": {
+                          "type": "boolean"
+                        },
+                        "adPublishingReadOnly": {
+                          "type": "boolean"
+                        },
+                        "adwordsReportingEnabled": {
+                          "type": "boolean"
+                        },
+                        "affiliateManagerEnabled": {
+                          "type": "boolean"
+                        },
+                        "agentReportingEnabled": {
+                          "type": "boolean"
+                        },
+                        "appointmentsEnabled": {
+                          "type": "boolean"
+                        },
+                        "assignedDataOnly": {
+                          "type": "boolean"
+                        },
+                        "attributionsReportingEnabled": {
+                          "type": "boolean"
+                        },
+                        "bloggingEnabled": {
+                          "type": "boolean"
+                        },
+                        "botService": {
+                          "type": "boolean"
+                        },
+                        "bulkRequestsEnabled": {
+                          "type": "boolean"
+                        },
+                        "campaignsEnabled": {
+                          "type": "boolean"
+                        },
+                        "campaignsReadOnly": {
+                          "type": "boolean"
+                        },
+                        "cancelSubscriptionEnabled": {
+                          "type": "boolean"
+                        },
+                        "certificatesEnabled": {
+                          "type": "boolean"
+                        },
+                        "communitiesEnabled": {
+                          "type": "boolean"
+                        },
+                        "contactsEnabled": {
+                          "type": "boolean"
+                        },
+                        "contentAiEnabled": {
+                          "type": "boolean"
+                        },
+                        "conversationsEnabled": {
+                          "type": "boolean"
+                        },
+                        "customMenuLinkReadOnly": {
+                          "type": "boolean"
+                        },
+                        "customMenuLinkWrite": {
+                          "type": "boolean"
+                        },
+                        "dashboardStatsEnabled": {
+                          "type": "boolean"
+                        },
+                        "exportPaymentsEnabled": {
+                          "type": "boolean"
+                        },
+                        "facebookAdsReportingEnabled": {
+                          "type": "boolean"
+                        },
+                        "funnelsEnabled": {
+                          "type": "boolean"
+                        },
+                        "invoiceEnabled": {
+                          "type": "boolean"
+                        },
+                        "leadValueEnabled": {
+                          "type": "boolean"
+                        },
+                        "marketingEnabled": {
+                          "type": "boolean"
+                        },
+                        "mediaStorageEnabled": {
+                          "type": "boolean"
+                        },
+                        "membershipEnabled": {
+                          "type": "boolean"
+                        },
+                        "onlineListingsEnabled": {
+                          "type": "boolean"
+                        },
+                        "opportunitiesBulkActionsEnabled": {
+                          "type": "boolean"
+                        },
+                        "opportunitiesEnabled": {
+                          "type": "boolean"
+                        },
+                        "paymentsEnabled": {
+                          "type": "boolean"
+                        },
+                        "phoneCallEnabled": {
+                          "type": "boolean"
+                        },
+                        "recordPaymentEnabled": {
+                          "type": "boolean"
+                        },
+                        "refundsEnabled": {
+                          "type": "boolean"
+                        },
+                        "reportingEnabled": {
+                          "type": "boolean"
+                        },
+                        "reviewsEnabled": {
+                          "type": "boolean"
+                        },
+                        "settingsEnabled": {
+                          "type": "boolean"
+                        },
+                        "socialPlanner": {
+                          "type": "boolean"
+                        },
+                        "tagsEnabled": {
+                          "type": "boolean"
+                        },
+                        "triggersEnabled": {
+                          "type": "boolean"
+                        },
+                        "websitesEnabled": {
+                          "type": "boolean"
+                        },
+                        "wordpressEnabled": {
+                          "type": "boolean"
+                        },
+                        "workflowsEnabled": {
+                          "type": "boolean"
+                        },
+                        "workflowsReadOnly": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    "phone": {
+                      "type": "string",
+                      "example": "+1234567890"
+                    },
+                    "roles": {
+                      "type": "object",
+                      "properties": {
+                        "locationIds": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "example": [
+                            "iCIimh54FbyFY9rQ7H"
+                          ]
+                        },
+                        "role": {
+                          "type": "string",
+                          "example": "user"
+                        },
+                        "type": {
+                          "type": "string",
+                          "example": "account"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "User was not found by this email",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "There is no such user with email = John@doe.com"
+                },
+                "user": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Unauthorized"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "General error occurred while getting lead by id",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error while getting user by email 'error'"
+                },
+                "user": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Validation error in the request payload",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Validation error {'email': ['Missing data for required field.']}"
+                },
+                "user": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -227,7 +1377,11 @@
       "patch": {
         "summary": "Add tags to a lead",
         "description": "Adds tags to an existing lead.",
-        "security": [{"ApiKeyAuth": []}],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "lead_id",
@@ -243,16 +1397,185 @@
             "schema": {
               "type": "object",
               "properties": {
-                "tags": {"type": "array", "items": {"type": "string"}}
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
               },
-              "required": ["tags"]
+              "required": [
+                "tags"
+              ]
             }
           }
         ],
         "responses": {
-          "200": {"description": "Tags successfully added"},
-          "400": {"description": "Error adding tags"},
-          "401": {"description": "Unauthorized"}
+          "201": {
+            "description": "Add tags to a lead",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Tags added successfully"
+                },
+                "contact": {
+                  "type": "object",
+                  "properties": {
+                    "city": {
+                      "type": "string",
+                      "example": "N/A"
+                    },
+                    "country": {
+                      "type": "string",
+                      "example": "CA"
+                    },
+                    "customField": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "fieldValue": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "example": [
+                        {
+                          "fieldValue": "Laundromats",
+                          "id": "R3CCQhYeG4kZ5NSTW5vk"
+                        },
+                        {
+                          "fieldValue": "https://www.findbusinesses4sale.com/rca/eyJjaGF0X2lkIjoxODY0NSwiY29ubmVjdGlvbl9vd25lcl9pZCI6IjE4NzA1In0=/",
+                          "id": "F4Bkzj3AXKtBiri6S3Xe"
+                        }
+                      ]
+                    },
+                    "dateAdded": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2025-03-28T14:45:09.882Z"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "mconcha@burmanu.ca"
+                    },
+                    "emailLowerCase": {
+                      "type": "string",
+                      "example": "mconcha@burmanu.ca"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "example": "Sara"
+                    },
+                    "firstNameLowerCase": {
+                      "type": "string",
+                      "example": "sara"
+                    },
+                    "fullNameLowerCase": {
+                      "type": "string",
+                      "example": "sara olit"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "TBfGmIEsBVStLeBGAwiG"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "example": "Olit"
+                    },
+                    "lastNameLowerCase": {
+                      "type": "string",
+                      "example": "olit"
+                    },
+                    "locationId": {
+                      "type": "string",
+                      "example": "iCIim8m7X3EQyFY9rQ7H"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "example": "+17789800752"
+                    },
+                    "source": {
+                      "type": "string",
+                      "example": "FB4S"
+                    },
+                    "state": {
+                      "type": "string",
+                      "example": "N/A"
+                    },
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "fb4s"
+                      ]
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "lead"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Unauthorized"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "General error occurred while adding tags",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error: 'error'"
+                },
+                "contact": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Validation error in the request payload",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Validation error {'tags': ['Missing data for required field.']}"
+                },
+                "contact": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -260,7 +1583,11 @@
       "post": {
         "summary": "Create a task",
         "description": "Creates a new task based on lead_id in URL.",
-        "security": [{"ApiKeyAuth": []}],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "lead_id",
@@ -276,69 +1603,270 @@
             "schema": {
               "type": "object",
               "properties": {
-                "title": {"type": "string"},
-                "description": {"type": "string"},
-                "dueDate": {"type": "string",
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "dueDate": {
+                  "type": "string",
                   "example": "2025-03-15T11:00:00Z"
                 }
               },
-              "required": ["title", "description", "dueDate"]
+              "required": [
+                "title",
+                "description",
+                "dueDate"
+              ]
             }
           }
         ],
         "responses": {
-          "200": {"description": "GHL task payload"},
-          "401": {"description": "Unauthorized"}
+          "201": {
+            "description": "Add task to a lead",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Task added successfully"
+                },
+                "task": {
+                  "type": "object",
+                  "properties": {
+                    "description": {
+                      "type": "string",
+                      "example": "Lorem"
+                    },
+                    "dueDate": {
+                      "type": "string",
+                      "example": "2025-03-31T09:56:37.959Z"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "W8XY34psJh1Z3PltsRKQ"
+                    },
+                    "isCompleted": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "title": {
+                      "type": "string",
+                      "example": "Lorem"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Unauthorized"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "General error occurred while creating task",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error: 'error'"
+                },
+                "task": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Validation error in the request payload",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Validation error {'dueDate': ['Missing data for required field.']}"
+                },
+                "task": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          }
         }
       }
     },
     "/lead/{lead_id}/notes": {
-  "post": {
-    "summary": "Create a task",
-    "description": "Creates a new task for a specific lead based on lead_id in URL.",
-    "security": [{"ApiKeyAuth": []}],
-    "parameters": [
-      {
-        "name": "lead_id",
-        "in": "path",
-        "required": true,
-        "type": "string",
-        "description": "ID of the lead to associate the task with"
-      },
-      {
-        "name": "body",
-        "in": "body",
-        "required": true,
-        "schema": {
-          "type": "object",
-          "properties": {
-            "property": {
+      "post": {
+        "summary": "Create a task",
+        "description": "Creates a new task for a specific lead based on lead_id in URL.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "lead_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the lead to associate the task with"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
               "type": "object",
               "properties": {
-                "street": {"type": "string"},
-                "city": {"type": "string"},
-                "state": {"type": "string"},
-                "code": {"type": "string"},
-                "mlsNumber": {"type": "string"},
-                "url": {"type": "string", "format": "uri"}
+                "property": {
+                  "type": "object",
+                  "properties": {
+                    "street": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "mlsNumber": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  }
+                },
+                "type": {
+                  "type": "string"
+                },
+                "source": {
+                  "type": "string"
+                },
+                "system": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "property",
+                "description",
+                "message"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Add note to a lead",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Note added successfully"
+                },
+                "note": {
+                  "type": "object",
+                  "properties": {
+                    "body": {
+                      "type": "string",
+                      "example": "Property Inquiry<br>https://www.findbusinesses4sale.com/listing/.../<br>MLS#123456<br><br>via: FB4S<br><br>Please provide me with more information about this business.<br><br>Laundromats at BOUNDARY in Vancouver, British Columbia, Price: $198,000, Date: 2025-03-01 18:08:47"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "example": "2025-03-31T09:56:37.959Z"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "W8xz34psJh1Z3PltsRKQ"
+                    }
+                  }
+                }
               }
-            },
-            "type": {"type": "string"},
-            "source": {"type": "string"},
-            "system": {"type": "string"},
-            "description": {"type": "string"},
-            "message": {"type": "string"}
+            }
           },
-          "required": ["property", "description", "message"]
+          "401": {
+            "description": "Unauthorized request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Unauthorized"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "General error occurred while adding note",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error: 'error'"
+                },
+                "note": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Validation error in the request payload",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Validation error {'property': ['Missing data for required field.']}"
+                },
+                "note": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          }
         }
       }
-    ],
-    "responses": {
-      "201": {"description": "Task successfully created"},
-      "400": {"description": "Error"},
-      "401": {"description": "Unauthorized"}
     }
   }
-}
-}
 }
