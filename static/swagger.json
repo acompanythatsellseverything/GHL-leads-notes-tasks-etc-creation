@@ -668,6 +668,85 @@
             }
           }
         }
+      },
+      "delete": {
+        "summary": "Delete an existing lead",
+        "description": "Delete lead details using the lead ID.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lead is successfully deleted",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Successfully deleted"
+                },
+                "contact": {
+                  "type": [
+                    "boolean"
+                  ],
+                  "example": true
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The contact id is invalid.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "The contact id is invalid."
+                },
+                "contact": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Unauthorized"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "General error occurred while deleting lead",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error: Unexpected issue occurred"
+                },
+                "contact": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/get_lead": {
