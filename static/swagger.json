@@ -167,6 +167,9 @@
                 },
                 "message": {
                   "type": "string"
+                },
+                "selected_realtor_email": {
+                  "type": "string"
                 }
               },
               "required": [
