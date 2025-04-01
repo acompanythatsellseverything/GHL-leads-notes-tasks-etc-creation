@@ -1452,6 +1452,87 @@
         }
       }
     },
+    "/users": {
+      "get": {
+        "summary": "Get users(team members) list",
+        "description": "Retrieves users(team members) list",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved users list",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Successfully get users list"
+                },
+                "users": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/User"
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "User was not found by this email",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "There is no users currently in this location"
+                },
+                "users": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Unauthorized"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "General error occurred while getting lead by id",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error while getting a users list 'error'"
+                },
+                "users": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/lead/{lead_id}/tags": {
       "patch": {
         "summary": "Add tags to a lead",
@@ -1943,6 +2024,34 @@
                 }
               }
             }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string" },
+        "firstName": { "type": "string" },
+        "lastName": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "permissions": {
+          "type": "object",
+          "additionalProperties": { "type": "boolean" }
+        },
+        "roles": {
+          "type": "object",
+          "properties": {
+            "locationIds": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "role": { "type": "string" },
+            "type": { "type": "string" }
           }
         }
       }
