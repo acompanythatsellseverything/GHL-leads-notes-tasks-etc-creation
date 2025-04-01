@@ -13,7 +13,7 @@ from utils.create_tasks import create_task
 from utils.delete_lead import _delete_lead
 from utils.update_lead import _update_lead
 from utils.slack_troubleshooting import send_slack_notification
-from utils.utils import _get_lead_by_email, _get_user_by_email, _get_lead_by_id
+from utils.utils import _get_lead_by_email, _get_user_by_email, _get_lead_by_id, _get_users_list
 from validation.add_tags_validation import tags_validation
 from validation.get_lead_validation import get_lead_by_email_schema
 from validation.create_lead_validation import post_lead_schema
@@ -211,6 +211,22 @@ def get_user_by_email():
     if team_member is False:
         return jsonify({"message": f"There is no such user with email = {lookup_email}", "user": None}), 202
     return jsonify({"message": "Successfully get user by email", "user": team_member}), 200
+
+
+@app.route('/users', methods=['GET'])
+def get_users_list():
+    provided_key = request.headers.get("X-API-KEY")
+    if provided_key != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    try:
+        agents_list = _get_users_list()
+    except Exception as e:
+        send_slack_notification("Error while getting lead\n" + str(e))
+        logger.error("Error while getting a user\n" + str(e))
+        return jsonify({"message": f"Error while getting a users list {e}", "users": None}), 400
+    if agents_list is False:
+        return jsonify({"message": f"There is no users currently in this location", "users": None}), 202
+    return jsonify({"message": "Successfully get users list", "users": agents_list}), 200
 
 
 @app.route('/lead/<string:lead_id>/tags', methods=['PATCH'])

@@ -44,3 +44,10 @@ def _get_user_by_email(email):
                 return user
     logger.info(f"User with email:{email} was not found")
     return False
+
+
+def _get_users_list():
+    response = requests.get(LOOKUP_USER_URL, headers=HEADERS)
+    if response.json().get("users"):
+        return response.json().get("users")
+    return False
