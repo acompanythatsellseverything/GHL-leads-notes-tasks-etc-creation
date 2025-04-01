@@ -5,6 +5,7 @@ import logging
 from dotenv import load_dotenv
 
 from utils.create_note import create_lead_property_inquiry
+from utils.utils import _get_user_by_email
 
 load_dotenv()
 
@@ -35,6 +36,9 @@ def ghl_contact_lookup(data, has_property):
 # Preparing json data for ghl api
 def prepare_json_data_for_ghl(data: dict) -> dict:
     result = {}
+    if data.get("selected_realtor_email"):
+        team_member = _get_user_by_email(data.get("selected_realtor_email"))
+        result["assignedTo"] = team_member.get("id")
     person_data = data["person"]
     property_data = data.get("property", {})
     result["email"] = person_data["emails"][0].get("value")
@@ -60,6 +64,17 @@ def prepare_json_data_for_ghl(data: dict) -> dict:
         "EcWFyMMhEZuLm5hz9wpP": person_data.get("customProvince"),  # Province
         "fNUZTAUpB0BiA3ff5nSG": person_data.get("customAddress"),  # Custom Address
         "yIiyCWtlHAkfKrWwin3H": person_data.get("customCity"),  # Custom City
+        "WfBlGcyHtMZIy885bv2q": person_data.get("customStage"), # Stage
+        "zkkxcKSBxGG0AwKg7zb9": person_data.get("customPrice"), # Price
+        "kN2l6aNW601zksRV5L0D": person_data.get("customClosingAnniversary"), # Closing Anniversary
+        "xNiTcYOSPKyG6UK9PHEn": person_data.get("customYlopoSellerReport"), # Ylopo Seller Report
+        "uvG7VhHmPyqjD976RNoW": person_data.get("customParentCategory"), # Parent Category
+        "fkIooCxVyocAQeMlwWAo": person_data.get("customWhoareyou"), # Who are you?
+        "BWFdoHapnpo04EHpG5F0": person_data.get("customLastActivity"), # Last Activity
+        "SBQ7tdjkwFMumNkfGrHw": person_data.get("customCloseDate"), # Close Date
+        "SujDeGnOKJXlifbU7fLo": person_data.get("customLisitngPushesSent"), # Lisitng Pushes Sent
+        "gpGUaXRBHdURtrh7nmlF": person_data.get("customYlopoStarsLink"), # Ylopo Stars Link
+        "LzbUJkxo7kRClIomCc0U": person_data.get("customOldID"), # Old ID
     }
     return result
 
@@ -71,6 +86,7 @@ def create_ghl_lead(data, has_property):
     else:
         # if there is no such lead in GHL - create a lead and if payload contains property create note(Property Inquiry)
         prepared_ghl_json = prepare_json_data_for_ghl(data)
+        logger.info(f"{prepared_ghl_json}")
         response = requests.post(CREATE_LEAD_BASE_URL, json=prepared_ghl_json, headers=HEADERS)
         if has_property:
             ghl_id = response.json().get("contact").get("id")
