@@ -10,6 +10,7 @@ from utils.add_tags import add_tags
 from utils.create_lead import create_ghl_lead
 from utils.create_note import create_lead_property_inquiry
 from utils.create_tasks import create_task
+from utils.delete_lead import _delete_lead
 from utils.update_lead import _update_lead
 from utils.slack_troubleshooting import send_slack_notification
 from utils.utils import _get_lead_by_email, _get_user_by_email, _get_lead_by_id
@@ -116,6 +117,38 @@ def update_lead(lead_id):
         return jsonify({"message": f"Error: {e}", "contact": None}), 400
     return jsonify({"contact": updated_lead, "message": "Lead is successfully updated"}), 200
     # end update lead block ______________________________
+
+
+@app.route('/lead/<string:lead_id>', methods=['DELETE'])
+def delete_lead(lead_id):
+
+    # auth block ______________________________________________
+    provided_key = request.headers.get("X-API-KEY")
+    if provided_key != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    logger.info(f"Received lead delete request")
+    # end auth block _____________________________________________
+
+    # delete lead block ____________________________________________
+    try:
+
+        deleted_lead = _delete_lead(lead_id)
+        logger.info(f"{deleted_lead}")
+
+        delete_lead_status_code = deleted_lead[0]
+        delete_lead_message = deleted_lead[1]["id"].get("message")
+
+        if delete_lead_status_code == 422:
+            logger.info(f"User was not deleted")
+            return jsonify({"message": delete_lead_message, "contact": None}), 422
+    except Exception as e:
+        error_msg = traceback.format_exc()
+        send_slack_notification("Error while deleting lead\n" + str(e) + "\n" + str(error_msg))
+        logger.error("Error while deleting lead\n" + str(e) + "\n" + str(error_msg))
+        return jsonify({"message": f"Error: {e}", "contact": None}), 400
+    logger.info(f"User was deleted")
+    return jsonify({"message": delete_lead_message, "contact": True}), 200
+    # end delete lead block ______________________________
 
 
 @app.route('/get_lead', methods=['POST'])
