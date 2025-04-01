@@ -39,10 +39,21 @@ class PersonSchema(Schema):
     emails = fields.List(fields.Nested(EmailSchema))
     phones = fields.List(fields.Nested(PhoneSchema))
     tags = fields.List(fields.Str())
+    customStage = fields.Str()
+    customPrice = fields.Str()
+    customClosingAnniversary = fields.Str()
+    customYlopoSellerReport = fields.Str()
+    customWhoareyou = fields.Str()
+    customLastActivity = fields.Str()
+    customCloseDate = fields.Str()
+    customLisitngPushesSent = fields.Str()
+    customYlopoStarsLink = fields.Str()
+    customOldID = fields.Str()
 
 
 class UpdateLeadSchema(Schema):
     person = fields.Nested(PersonSchema, required=True)
+    selected_realtor_email = fields.Email()
 
 
 update_lead_schema = UpdateLeadSchema()

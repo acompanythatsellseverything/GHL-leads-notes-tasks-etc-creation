@@ -24,7 +24,7 @@ def prepare_lead_data(data: dict) -> dict:
     phone = person_data.get("phones", [{}])[0].get("value")
     first_name = person_data.get("firstName")
     last_name = person_data.get("lastName")
-    assigned_user_id = person_data.get("assignedUserId")
+    assigned_user_id = person_data.get("selected_realtor_email")
 
     address = person_data.get("addresses", [{}])[0]
     city = address.get("city")
@@ -43,6 +43,22 @@ def prepare_lead_data(data: dict) -> dict:
         "EcWFyMMhEZuLm5hz9wpP": person_data.get("customProvince"),
         "fNUZTAUpB0BiA3ff5nSG": person_data.get("customAddress"),
         "yIiyCWtlHAkfKrWwin3H": person_data.get("customCity"),
+        "WfBlGcyHtMZIy885bv2q": person_data.get("customStage"),
+        "zkkxcKSBxGG0AwKg7zb9": person_data.get("customPrice"),
+        "kN2l6aNW601zksRV5L0D": person_data.get("customClosingAnniversary"),
+        "KUpiQ32dAm11q4gu9MB1": person_data.get("customChromeExtensionLink"),
+        "2C3PcAa0JdOHRu95mWzp": person_data.get("customListingURLPath"),
+        "xNiTcYOSPKyG6UK9PHEn": person_data.get("customYlopoSellerReport"),
+        "fkIooCxVyocAQeMlwWAo": person_data.get("customWhoareyou"),
+        "uvG7VhHmPyqjD976RNoW": person_data.get("customParentCategory"),
+        "BWFdoHapnpo04EHpG5F0": person_data.get("customLastActivity"),
+        "SBQ7tdjkwFMumNkfGrHw": person_data.get("customCloseDate"),
+        "SujDeGnOKJXlifbU7fLo": person_data.get("customLisitngPushesSent"),
+        "gpGUaXRBHdURtrh7nmlF": person_data.get("customYlopoStarsLink"),
+        "pwwHyq93djePQzzMECFI": person_data.get("customAssignedNotFromWillowAt"),
+        "01MYfI09Z919mFibcZNG": person_data.get("customExpectedPriceRange"),
+        "Cv7kNq7m8CBVDh7n9XEj": person_data.get("customAbandonedPondReason"),
+        "LzbUJkxo7kRClIomCc0U": person_data.get("customOldID")
     }
 
     # Filter out invalid values
