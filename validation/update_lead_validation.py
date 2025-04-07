@@ -40,6 +40,7 @@ class PersonSchema(Schema):
     phones = fields.List(fields.Nested(PhoneSchema))
     tags = fields.List(fields.Str())
     customStage = fields.Str()
+    pond = fields.Str()
     customPrice = fields.Str()
     customClosingAnniversary = fields.Str()
     customYlopoSellerReport = fields.Str()

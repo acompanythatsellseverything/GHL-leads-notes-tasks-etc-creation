@@ -49,6 +49,7 @@ def prepare_lead_data(data: dict) -> dict:
         "fNUZTAUpB0BiA3ff5nSG": person_data.get("customAddress"),
         "yIiyCWtlHAkfKrWwin3H": person_data.get("customCity"),
         "WfBlGcyHtMZIy885bv2q": person_data.get("customStage"),
+        "qe4zFdjyWpWlKjUkJ1Oz": person_data.get("pond"),
         "zkkxcKSBxGG0AwKg7zb9": person_data.get("customPrice"),
         "kN2l6aNW601zksRV5L0D": person_data.get("customClosingAnniversary"),
         "KUpiQ32dAm11q4gu9MB1": person_data.get("customChromeExtensionLink"),
