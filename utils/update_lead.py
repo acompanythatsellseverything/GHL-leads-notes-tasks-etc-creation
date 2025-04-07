@@ -1,8 +1,13 @@
+import logging
 import os
 
 import requests
 
 from dotenv import load_dotenv
+
+from utils.utils import _get_user_by_email
+
+logger = logging.getLogger()
 
 load_dotenv()
 
@@ -24,7 +29,7 @@ def prepare_lead_data(data: dict) -> dict:
     phone = person_data.get("phones", [{}])[0].get("value")
     first_name = person_data.get("firstName")
     last_name = person_data.get("lastName")
-    assigned_user_id = person_data.get("selected_realtor_email")
+    assigned_user_email = person_data.get("selected_realtor_email")
 
     address = person_data.get("addresses", [{}])[0]
     city = address.get("city")
@@ -62,8 +67,8 @@ def prepare_lead_data(data: dict) -> dict:
     }
 
     # Filter out invalid values
-    if valid_value(assigned_user_id):
-        lead_data["assignedTo"] = assigned_user_id
+    if valid_value(assigned_user_email):
+        lead_data["assignedTo"] = _get_user_by_email(assigned_user_email).get("id")
     if valid_value(email):
         lead_data["email"] = email
     if valid_value(phone):
@@ -91,6 +96,7 @@ def prepare_lead_data(data: dict) -> dict:
 def _update_lead(data: dict, ghl_id: str):
     prepared_lead_data = prepare_lead_data(data)
     response = requests.put(UPDATE_BASE_URL + ghl_id, headers=HEADERS, json=prepared_lead_data)
+    logger.info(f"Prepared update data {prepared_lead_data}")
     contact = response.json().get("contact")
     if contact:
         return contact

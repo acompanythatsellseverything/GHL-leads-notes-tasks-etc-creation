@@ -49,11 +49,11 @@ class PersonSchema(Schema):
     customLisitngPushesSent = fields.Str()
     customYlopoStarsLink = fields.Str()
     customOldID = fields.Str()
+    selected_realtor_email = fields.Email()
 
 
 class UpdateLeadSchema(Schema):
     person = fields.Nested(PersonSchema, required=True)
-    selected_realtor_email = fields.Email()
 
 
 update_lead_schema = UpdateLeadSchema()
