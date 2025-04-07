@@ -1,5 +1,7 @@
 import os
 import traceback
+
+from db.ponds_query import get_ponds
 from logger import logger
 from flask import Flask, render_template, request, jsonify
 from flask_swagger_ui import get_swaggerui_blueprint
@@ -306,6 +308,20 @@ def create_task_endpoint(lead_id):
         return jsonify({"message": f"error: {e}", "task": None}), 400
 
     return jsonify({"task": lead_task, "message": "Task added successfully"}), 200
+
+
+@app.route('/ponds', methods=['GET'])
+def get_ponds_value():
+    provided_key = request.headers.get("X-API-KEY")
+
+    if provided_key != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    logger.info(f"Received request to get ponds")
+
+    ponds = get_ponds()
+    if ponds.get("ponds"):
+        return jsonify({"message": "Successfully retrieve ponds", "ponds": ponds.get("ponds")}), 200
+    return jsonify({"message": "Somthing went wrong", "ponds": None}), 202
 
 
 if __name__ == '__main__':

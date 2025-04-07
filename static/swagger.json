@@ -2090,6 +2090,67 @@
           }
         }
       }
+    },
+    "/ponds": {
+      "get": {
+        "summary": "Get existing ponds",
+        "description": "Retrieve FB4S ponds",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve FB4S ponds",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Successfully retrieve ponds"
+                },
+                "ponds": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "pond_name": {
+                        "type": "string"
+                      },
+                      "pond_value": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Retrieve FB4S ponds",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Somthing went wrong"
+                },
+                "ponds": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
