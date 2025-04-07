@@ -47,6 +47,7 @@ class PersonSchema(Schema):
     customLisitngPushesSent = fields.Str()
     customYlopoStarsLink = fields.Str()
     customOldID = fields.Str()
+    selected_realtor_email = fields.Email()
 
 
 class PropertySchema(Schema):
@@ -67,7 +68,6 @@ class PostLeadSchema(Schema):
     system = fields.Str()
     description = fields.Str()
     message = fields.Str()
-    selected_realtor_email = fields.Email()
 
 
 post_lead_schema = PostLeadSchema()

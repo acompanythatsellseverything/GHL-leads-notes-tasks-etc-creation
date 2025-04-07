@@ -36,10 +36,11 @@ def ghl_contact_lookup(data, has_property):
 # Preparing json data for ghl api
 def prepare_json_data_for_ghl(data: dict) -> dict:
     result = {}
-    if data.get("selected_realtor_email"):
-        team_member = _get_user_by_email(data.get("selected_realtor_email"))
-        result["assignedTo"] = team_member.get("id")
     person_data = data["person"]
+    assigned_realtor = person_data.get("selected_realtor_email")
+    if assigned_realtor:
+        team_member = _get_user_by_email(assigned_realtor)
+        result["assignedTo"] = team_member.get("id")
     property_data = data.get("property", {})
     result["email"] = person_data["emails"][0].get("value")
     result["phone"] = person_data["phones"][0].get("value")
