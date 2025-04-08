@@ -240,7 +240,7 @@ def add_tag_to_lead(lead_id):
     logger.info(f"Received tags payload:\n{request.json}")
 
     try:
-        validated_data = tags_validation(request.json)
+        validated_data = tags_validation.load(request.json)
         lead = add_tags(ghl_id=lead_id, tags_to_add=validated_data)
         logger.info("Tags added successfully")
 
