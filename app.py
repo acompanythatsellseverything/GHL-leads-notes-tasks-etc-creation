@@ -13,7 +13,7 @@ from utils.create_lead import create_ghl_lead
 from utils.create_note import create_lead_property_inquiry
 from utils.create_tasks import create_task
 from utils.delete_lead import _delete_lead
-from utils.update_lead import _update_lead
+from utils.update_lead import _update_lead, add_followers
 from utils.slack_troubleshooting import send_slack_notification
 from utils.utils import _get_lead_by_email, _get_user_by_email, _get_lead_by_id, _get_users_list
 from validation.add_tags_validation import tags_validation
@@ -150,6 +150,34 @@ def delete_lead(lead_id):
         return jsonify({"message": f"Error: {e}", "contact": None}), 400
     logger.info(f"User was deleted")
     return jsonify({"message": delete_lead_message, "contact": True}), 200
+    # end delete lead block ______________________________
+
+
+@app.route('/lead/<string:lead_id>/followers', methods=['POST'])
+def add_followers_to_lead(lead_id):
+
+    # auth block ______________________________________________
+    provided_key = request.headers.get("X-API-KEY")
+    if provided_key != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    logger.info(f"Received followers request {request.json}")
+    # end auth block _____________________________________________
+
+    # delete lead block ____________________________________________
+    try:
+        followers = add_followers(lead_id, request.json)
+        logger.info(f"{followers}")
+        if followers.get("status_code") == 201:
+            logger.info(f"Followers was added")
+            return jsonify({"message": f"followers added successfully"}), 201
+
+    except Exception as e:
+        error_msg = traceback.format_exc()
+        send_slack_notification("Error while adding followers to lead\n" + str(e) + "\n" + str(error_msg))
+        logger.error("Error while adding followers lead\n" + str(e) + "\n" + str(error_msg))
+        return jsonify({"message": f"Error: {e}"}), 400
+    logger.info(f"followers weren't added")
+    return jsonify({"message": f"Something went wrong, followers weren't added"}), 202
     # end delete lead block ______________________________
 
 
