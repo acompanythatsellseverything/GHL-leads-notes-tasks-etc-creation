@@ -12,6 +12,7 @@ logger = logging.getLogger()
 load_dotenv()
 
 GHL_API_KEY = os.getenv('GHL_API_KEY')
+MAKE_2_0_AUTH_URL = os.getenv('MAKE_GHL_2_0_AUTH_URL')
 HEADERS = {'Authorization': f'Bearer {GHL_API_KEY}'}
 UPDATE_BASE_URL = "https://rest.gohighlevel.com/v1/contacts/"
 
@@ -103,3 +104,12 @@ def _update_lead(data: dict, ghl_id: str):
         return contact
     return False
 
+
+def add_followers(lead_id: str, data: dict):
+    data["url"] = f"/contacts/{lead_id}/followers"
+    raw_followers = data["followers"]
+    print(raw_followers)
+    data["body"] = str({"followers": raw_followers})
+    print(data)
+    response = requests.post(MAKE_2_0_AUTH_URL, json=data)
+    return response.json()

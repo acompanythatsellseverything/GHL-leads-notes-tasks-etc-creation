@@ -17,6 +17,7 @@ from utils.update_lead import _update_lead, add_followers
 from utils.slack_troubleshooting import send_slack_notification
 from utils.utils import _get_lead_by_email, _get_user_by_email, _get_lead_by_id, _get_users_list
 from validation.add_tags_validation import tags_validation
+from validation.followers_validation import followers_schema
 from validation.get_lead_validation import get_lead_by_email_schema
 from validation.create_lead_validation import post_lead_schema
 from validation.notes_validation import notes_validation
@@ -165,12 +166,17 @@ def add_followers_to_lead(lead_id):
 
     # delete lead block ____________________________________________
     try:
-        followers = add_followers(lead_id, request.json)
+        validated_data = followers_schema.load(request.json)
+        followers = add_followers(lead_id, validated_data)
         logger.info(f"{followers}")
         if followers.get("status_code") == 201:
             logger.info(f"Followers was added")
             return jsonify({"message": f"followers added successfully"}), 201
 
+    except ValidationError as err:
+        send_slack_notification("Validation Error while adding followers\n" + str(err))
+        logger.error("Validation Error while adding followers\n" + str(err))
+        return jsonify({"message": f"Validation error while adding followers {err.messages}"}), 406
     except Exception as e:
         error_msg = traceback.format_exc()
         send_slack_notification("Error while adding followers to lead\n" + str(e) + "\n" + str(error_msg))

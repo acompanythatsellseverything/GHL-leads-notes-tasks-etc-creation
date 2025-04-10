@@ -812,6 +812,101 @@
         }
       }
     },
+    "/lead/{lead_id}/followers": {
+      "post": {
+        "summary": "add followers(collaborators) to lead",
+        "description": "add followers(collaborators) to lead",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "followers": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example": "Fo7TmuqqwHIM22eno39t"
+                      }
+                    }
+              },
+              "required": [
+                "followers"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "follower added successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "followers added successfully"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Lead was not found by this email",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Something went wrong, followers weren't added"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Unauthorized"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Validation error in the request payload",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Validation error {'followers': ['Missing data for required field.']}"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "General error occurred while adding followers",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error: Unexpected issue occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/get_lead": {
       "post": {
         "summary": "Get lead by email",
@@ -1802,7 +1897,7 @@
         }
       }
     },
-    "/lead/{lead_id}/task": {
+    "/lead/{lead_id}/tasks": {
       "post": {
         "summary": "Create a task",
         "description": "Creates a new task based on lead_id in URL.",
