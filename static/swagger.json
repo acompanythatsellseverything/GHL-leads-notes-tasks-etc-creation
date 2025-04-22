@@ -1168,11 +1168,11 @@
                       "example": [
                         {
                           "fieldValue": "Laundromats",
-                          "id": "R3CCQhYeG4kZ5NSTW5vk"
+                          "id": "R3CC123456NSTW5vk"
                         },
                         {
                           "fieldValue": "https://www.findbusinesses4sale.com/rca/eyJjaGF0X2lkIjoxODY0NSwiY29ubmVjdGlvbl9vd25lcl9pZCI6IjE4NzA1In0=/",
-                          "id": "F4Bkzj3AXKtBiri6S3Xe"
+                          "id": "F4Bkz123456iri6S3Xe"
                         }
                       ]
                     },
@@ -1203,7 +1203,7 @@
                     },
                     "id": {
                       "type": "string",
-                      "example": "TBfGmIEsBVStLeBGAwiG"
+                      "example": "TBfG1234567wiG"
                     },
                     "lastName": {
                       "type": "string",
@@ -1215,7 +1215,7 @@
                     },
                     "locationId": {
                       "type": "string",
-                      "example": "iCIim8m7X3EQyFY9rQ7H"
+                      "example": "iCI12345yFY9rQ7H"
                     },
                     "phone": {
                       "type": "string",
@@ -1254,7 +1254,7 @@
               "properties": {
                 "message": {
                   "type": "string",
-                  "example": "There is no such contact with id = gHmgQjd5ffGdgb2"
+                  "example": "There is no such contact with id = 123"
                 },
                 "contact": {
                   "type": [
@@ -1351,7 +1351,7 @@
                     },
                     "id": {
                       "type": "string",
-                      "example": "Fo7TmuqGrWqeeeno34t"
+                      "example": "Fo7T23456o34t"
                     },
                     "lastName": {
                       "type": "string",
@@ -1520,7 +1520,7 @@
                             "type": "string"
                           },
                           "example": [
-                            "iCIimh54FbyFY9rQ7H"
+                            "iCIi43221Q7H"
                           ]
                         },
                         "role": {
@@ -1596,6 +1596,279 @@
                 "message": {
                   "type": "string",
                   "example": "Validation error {'email': ['Missing data for required field.']}"
+                },
+                "user": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get_user/{lead_id}": {
+      "get": {
+        "summary": "Get user(team member) by id",
+        "description": "Retrieves lead data based on id.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved user by id",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Successfully get user by id"
+                },
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "format": "email",
+                      "example": "John@doe.com"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "example": "John"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "Fo7123345eeeno34t"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "example": "Doe"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "John Doe"
+                    },
+                    "permissions": {
+                      "type": "object",
+                      "properties": {
+                        "adPublishingEnabled": {
+                          "type": "boolean"
+                        },
+                        "adPublishingReadOnly": {
+                          "type": "boolean"
+                        },
+                        "adwordsReportingEnabled": {
+                          "type": "boolean"
+                        },
+                        "affiliateManagerEnabled": {
+                          "type": "boolean"
+                        },
+                        "agentReportingEnabled": {
+                          "type": "boolean"
+                        },
+                        "appointmentsEnabled": {
+                          "type": "boolean"
+                        },
+                        "assignedDataOnly": {
+                          "type": "boolean"
+                        },
+                        "attributionsReportingEnabled": {
+                          "type": "boolean"
+                        },
+                        "bloggingEnabled": {
+                          "type": "boolean"
+                        },
+                        "botService": {
+                          "type": "boolean"
+                        },
+                        "bulkRequestsEnabled": {
+                          "type": "boolean"
+                        },
+                        "campaignsEnabled": {
+                          "type": "boolean"
+                        },
+                        "campaignsReadOnly": {
+                          "type": "boolean"
+                        },
+                        "cancelSubscriptionEnabled": {
+                          "type": "boolean"
+                        },
+                        "certificatesEnabled": {
+                          "type": "boolean"
+                        },
+                        "communitiesEnabled": {
+                          "type": "boolean"
+                        },
+                        "contactsEnabled": {
+                          "type": "boolean"
+                        },
+                        "contentAiEnabled": {
+                          "type": "boolean"
+                        },
+                        "conversationsEnabled": {
+                          "type": "boolean"
+                        },
+                        "customMenuLinkReadOnly": {
+                          "type": "boolean"
+                        },
+                        "customMenuLinkWrite": {
+                          "type": "boolean"
+                        },
+                        "dashboardStatsEnabled": {
+                          "type": "boolean"
+                        },
+                        "exportPaymentsEnabled": {
+                          "type": "boolean"
+                        },
+                        "facebookAdsReportingEnabled": {
+                          "type": "boolean"
+                        },
+                        "funnelsEnabled": {
+                          "type": "boolean"
+                        },
+                        "invoiceEnabled": {
+                          "type": "boolean"
+                        },
+                        "leadValueEnabled": {
+                          "type": "boolean"
+                        },
+                        "marketingEnabled": {
+                          "type": "boolean"
+                        },
+                        "mediaStorageEnabled": {
+                          "type": "boolean"
+                        },
+                        "membershipEnabled": {
+                          "type": "boolean"
+                        },
+                        "onlineListingsEnabled": {
+                          "type": "boolean"
+                        },
+                        "opportunitiesBulkActionsEnabled": {
+                          "type": "boolean"
+                        },
+                        "opportunitiesEnabled": {
+                          "type": "boolean"
+                        },
+                        "paymentsEnabled": {
+                          "type": "boolean"
+                        },
+                        "phoneCallEnabled": {
+                          "type": "boolean"
+                        },
+                        "recordPaymentEnabled": {
+                          "type": "boolean"
+                        },
+                        "refundsEnabled": {
+                          "type": "boolean"
+                        },
+                        "reportingEnabled": {
+                          "type": "boolean"
+                        },
+                        "reviewsEnabled": {
+                          "type": "boolean"
+                        },
+                        "settingsEnabled": {
+                          "type": "boolean"
+                        },
+                        "socialPlanner": {
+                          "type": "boolean"
+                        },
+                        "tagsEnabled": {
+                          "type": "boolean"
+                        },
+                        "triggersEnabled": {
+                          "type": "boolean"
+                        },
+                        "websitesEnabled": {
+                          "type": "boolean"
+                        },
+                        "wordpressEnabled": {
+                          "type": "boolean"
+                        },
+                        "workflowsEnabled": {
+                          "type": "boolean"
+                        },
+                        "workflowsReadOnly": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    "phone": {
+                      "type": "string",
+                      "example": "+1234567890"
+                    },
+                    "roles": {
+                      "type": "object",
+                      "properties": {
+                        "locationIds": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "example": [
+                            "iCI44546453455Q7H"
+                          ]
+                        },
+                        "role": {
+                          "type": "string",
+                          "example": "user"
+                        },
+                        "type": {
+                          "type": "string",
+                          "example": "account"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "User was not found by this id",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "There is no such user with id = 123"
+                },
+                "user": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "example": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Unauthorized"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "General error occurred while getting user by id",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error while getting user by id 'error'"
                 },
                 "user": {
                   "type": [

@@ -12,7 +12,7 @@ GHL_API_KEY = os.getenv('GHL_API_KEY')
 HEADERS = {'Authorization': f'Bearer {GHL_API_KEY}'}
 
 LOOKUP_LEAD_URL = "https://rest.gohighlevel.com/v1/contacts/lookup?email="
-LOOKUP_USER_URL = "https://rest.gohighlevel.com/v1/users/"
+BASIC_USER_URL = "https://rest.gohighlevel.com/v1/users/"
 CONTACT_URL = "https://rest.gohighlevel.com/v1/contacts/"
 
 
@@ -36,7 +36,7 @@ def _get_lead_by_email(email):
 
 
 def _get_user_by_email(email):
-    response = requests.get(LOOKUP_USER_URL, headers=HEADERS)
+    response = requests.get(BASIC_USER_URL, headers=HEADERS)
     if response.json().get("users"):
         for user in response.json().get("users"):
             if user.get("email") == email:
@@ -46,8 +46,13 @@ def _get_user_by_email(email):
     return False
 
 
+def _get_user_by_id(ghl_id):
+    response = requests.get(BASIC_USER_URL + ghl_id, headers=HEADERS)
+    return response.json()
+
+
 def _get_users_list():
-    response = requests.get(LOOKUP_USER_URL, headers=HEADERS)
+    response = requests.get(BASIC_USER_URL, headers=HEADERS)
     if response.json().get("users"):
         return response.json().get("users")
     return False

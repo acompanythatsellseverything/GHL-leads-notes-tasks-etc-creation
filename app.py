@@ -15,7 +15,7 @@ from utils.create_tasks import create_task
 from utils.delete_lead import _delete_lead
 from utils.update_lead import _update_lead, add_followers
 from utils.slack_troubleshooting import send_slack_notification
-from utils.utils import _get_lead_by_email, _get_user_by_email, _get_lead_by_id, _get_users_list
+from utils.utils import _get_lead_by_email, _get_user_by_email, _get_lead_by_id, _get_users_list, _get_user_by_id
 from validation.add_tags_validation import tags_validation
 from validation.followers_validation import followers_schema
 from validation.get_lead_validation import get_lead_by_email_schema
@@ -237,16 +237,33 @@ def get_user_by_email():
         lookup_email = request.json.get("email")
         team_member = _get_user_by_email(lookup_email)
     except ValidationError as err:
-        send_slack_notification("Validation Error while getting lead\n" + str(err))
+        send_slack_notification("Validation Error while getting user\n" + str(err))
         logger.error("Validation Error while getting lead\n" + str(err))
         return jsonify({"message": f"Validation error {err.messages}", "user": None}), 406
     except Exception as e:
-        send_slack_notification("Error while getting lead\n" + str(e))
+        send_slack_notification("Error while getting user\n" + str(e))
         logger.error("Error while getting a user\n" + str(e))
         return jsonify({"message": f"Error while getting a user {e}", "user": None}), 400
     if team_member is False:
         return jsonify({"message": f"There is no such user with email = {lookup_email}", "user": None}), 202
     return jsonify({"message": "Successfully get user by email", "user": team_member}), 200
+
+
+@app.route('/get_user/<string:lead_id>', methods=['GET'])
+def get_user_by_id(lead_id):
+    provided_key = request.headers.get("X-API-KEY")
+    if provided_key != API_KEY:
+        return jsonify({"error": "Unauthorized"}), 401
+    logger.info(f"Received request to get user by id")
+    try:
+        team_member = _get_user_by_id(lead_id)
+    except Exception as e:
+        send_slack_notification("Error while getting user by id\n" + str(e))
+        logger.error("Error while getting a user by id\n" + str(e))
+        return jsonify({"message": f"Error while getting a user by id{e}", "user": None}), 400
+    if team_member is False:
+        return jsonify({"message": f"There is no such user with id = {lead_id}", "user": None}), 202
+    return jsonify({"message": "Successfully get user by id", "user": team_member}), 200
 
 
 @app.route('/users', methods=['GET'])
