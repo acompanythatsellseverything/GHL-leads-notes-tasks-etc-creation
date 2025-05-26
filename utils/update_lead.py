@@ -100,6 +100,7 @@ def _update_lead(data: dict, ghl_id: str):
     response = requests.put(UPDATE_BASE_URL + ghl_id, headers=HEADERS, json=prepared_lead_data)
     logger.info(f"Prepared update data {prepared_lead_data}")
     contact = response.json().get("contact")
+    logger.info(f"Update response from GHL:\n{contact}")
     if contact:
         return contact
     return False
