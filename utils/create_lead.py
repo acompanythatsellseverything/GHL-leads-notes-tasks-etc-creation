@@ -11,11 +11,20 @@ load_dotenv()
 
 logger = logging.getLogger()
 
-GHL_API_KEY = os.getenv('GHL_API_KEY')
-HEADERS = {'Authorization': f'Bearer {GHL_API_KEY}'}
+GHL_API_KEY = os.getenv("GHL_API_KEY")
+HEADERS = {"Authorization": f"Bearer {GHL_API_KEY}"}
 
 CREATE_LEAD_BASE_URL = "https://rest.gohighlevel.com/v1/contacts/"
 LOOKUP_BASE_URL = "https://rest.gohighlevel.com/v1/contacts/lookup?email="
+AUTO_ASSIGN_URL = os.getenv("AUTO_ASSIGN_URL")
+
+
+BACKUP_ASSIGN_USER = {
+    "firstName": "Willow",
+    "id": "9pXq0rOQJOUWOxDmnMHP",
+    "lastName": "Sweet",
+    "name": "Willow Sweet",
+}
 
 
 # Check if such contact already exists in GHL
@@ -33,14 +42,37 @@ def ghl_contact_lookup(data, has_property):
     return False
 
 
+def prepare_json_data_for_auto_assign(data: dict) -> dict:
+    result = {}
+    property_data = data.get("property")
+    result["listing_mls"] = property_data["mlsNumber"]
+    result["listing_zip"] = property_data["code"]
+    result["listing_city"] = property_data["city"]
+    result["listing_province"] = property_data["state"]
+    result["buyer_email"] = data["person"]["emails"][0].get("value")
+    result["buyer_city"] = data["person"].get("CustomCity")
+    result["buyer_province"] = data["person"].get("CustomProvince")
+    result["cold_lead"] = 0
+    result["buyer_name"] = (
+        data["person"].get("firstName") + " " + data["person"].get("lastName")
+    )
+    return result
+
+
 # Preparing json data for ghl api
 def prepare_json_data_for_ghl(data: dict) -> dict:
     result = {}
     person_data = data["person"]
     assigned_realtor = person_data.get("selected_realtor_email")
-    if assigned_realtor:
+    auto_assigned_realtor = person_data.get("auto_assign_user_id")
+    if assigned_realtor: # If original payload have selected_realtor_email then it's manual assign
         team_member = _get_user_by_email(assigned_realtor)
         result["assignedTo"] = team_member.get("id")
+    if auto_assigned_realtor: # If original payload doesn't have selected_realtor_email then it's auto assign
+        result["assignedTo"] = auto_assigned_realtor
+    else: # If there is no selected_realtor_email and no property then lead is assigned to willow master acc
+        logger.info("No suitable users were found to auto-assign. Assign to Willow-master acc")
+        result["assignedTo"] = BACKUP_ASSIGN_USER.get("id")
     property_data = data.get("property", {})
     result["email"] = person_data["emails"][0].get("value")
     result["phone"] = person_data["phones"][0].get("value")
@@ -80,15 +112,42 @@ def prepare_json_data_for_ghl(data: dict) -> dict:
     return result
 
 
+def get_user_to_auto_assign(data: dict):
+    users = requests.get(
+        "http://127.0.0.1:5000/users", headers={"x-api-key": os.getenv("FLASK_API_KEY")}
+    ).json()
+
+    potential_number_1_user = data.get("assigned_realtor")
+    possible_users = data.get("possible_realtors")
+    for user in users["users"]: # Find potential user GHL id
+        if user.get("email") == potential_number_1_user:
+            return user
+    for possible_user in possible_users: # If potential user were not found in GHL user - we search by possible users
+        for user in users["users"]:
+            if user.get("email") == possible_user:
+                return user
+    # If we don't find realtor to assign - we assign lead to willow-master acc
+    return BACKUP_ASSIGN_USER
+
+
 def create_ghl_lead(data, has_property):
     existing_lead = ghl_contact_lookup(data, has_property)
     if existing_lead:
         return None
     else:
         # if there is no such lead in GHL - create a lead and if payload contains property create note(Property Inquiry)
+        if has_property and not data.get("selected_realtor_email"):
+            assign_payload = prepare_json_data_for_auto_assign(data)
+            auto_assign_response = requests.post(AUTO_ASSIGN_URL, json=assign_payload)
+            existing_possible_realtor = get_user_to_auto_assign(auto_assign_response.json())
+            logger.info(f"Realtor to auto assign: {existing_possible_realtor}")
+            data["person"]["auto_assign_user_id"] = existing_possible_realtor.get("id")
+
         prepared_ghl_json = prepare_json_data_for_ghl(data)
         logger.info(f"{prepared_ghl_json}")
-        response = requests.post(CREATE_LEAD_BASE_URL, json=prepared_ghl_json, headers=HEADERS)
+        response = requests.post(
+            CREATE_LEAD_BASE_URL, json=prepared_ghl_json, headers=HEADERS
+        )
         if has_property:
             ghl_id = response.json().get("contact").get("id")
             create_lead_property_inquiry(ghl_id, data)
