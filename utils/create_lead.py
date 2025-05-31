@@ -70,9 +70,6 @@ def prepare_json_data_for_ghl(data: dict) -> dict:
         result["assignedTo"] = team_member.get("id")
     if auto_assigned_realtor: # If original payload doesn't have selected_realtor_email then it's auto assign
         result["assignedTo"] = auto_assigned_realtor
-    else: # If there is no selected_realtor_email and no property then lead is assigned to willow master acc
-        logger.info("No suitable users were found to auto-assign. Assign to Willow-master acc")
-        result["assignedTo"] = BACKUP_ASSIGN_USER.get("id")
     property_data = data.get("property", {})
     result["email"] = person_data["emails"][0].get("value")
     result["phone"] = person_data["phones"][0].get("value")
@@ -109,6 +106,9 @@ def prepare_json_data_for_ghl(data: dict) -> dict:
         "gpGUaXRBHdURtrh7nmlF": person_data.get("customYlopoStarsLink"), # Ylopo Stars Link
         "LzbUJkxo7kRClIomCc0U": person_data.get("customOldID"), # Old ID
     }
+    if not result["assignedTo"]: # If there is no selected_realtor_email and no property then lead is assigned to willow master acc
+        logger.info("No suitable users were found to auto-assign. Assign to Willow-master acc")
+        result["assignedTo"] = BACKUP_ASSIGN_USER.get("id")
     return result
 
 
@@ -127,6 +127,7 @@ def get_user_to_auto_assign(data: dict):
             if user.get("email") == possible_user:
                 return user
     # If we don't find realtor to assign - we assign lead to willow-master acc
+    logger.info("No suitable users were found to auto-assign. Assign to Willow-master acc")
     return BACKUP_ASSIGN_USER
 
 
@@ -136,7 +137,7 @@ def create_ghl_lead(data, has_property):
         return None
     else:
         # if there is no such lead in GHL - create a lead and if payload contains property create note(Property Inquiry)
-        if has_property and not data.get("selected_realtor_email"):
+        if has_property and not data["person"].get("selected_realtor_email"):
             assign_payload = prepare_json_data_for_auto_assign(data)
             auto_assign_response = requests.post(AUTO_ASSIGN_URL, json=assign_payload)
             existing_possible_realtor = get_user_to_auto_assign(auto_assign_response.json())
