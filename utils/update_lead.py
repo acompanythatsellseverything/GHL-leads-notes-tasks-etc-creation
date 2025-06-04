@@ -14,7 +14,7 @@ load_dotenv()
 GHL_API_KEY = os.getenv('GHL_API_KEY')
 MAKE_2_0_AUTH_URL = os.getenv('MAKE_GHL_2_0_AUTH_URL')
 HEADERS = {'Authorization': f'Bearer {GHL_API_KEY}'}
-UPDATE_BASE_URL = "https://rest.gohighlevel.com/v1/contacts/"
+UPDATE_BASE_URL = "https://rest.gohighlevel.com/v2/contacts/"
 
 
 def prepare_lead_data(data: dict) -> dict:
@@ -107,10 +107,33 @@ def _update_lead(data: dict, ghl_id: str):
 
 
 def add_followers(lead_id: str, data: dict):
+    request_data = {
+        "url": f"/contacts/{lead_id}",
+        "action": "get",
+    }
+
+    lead = requests.get(MAKE_2_0_AUTH_URL, json=request_data)
+    lead_followers = lead.json().get("contact").get("followers")
+
     data["url"] = f"/contacts/{lead_id}/followers"
+    data["action"] = "add"
     raw_followers = data["followers"]
-    print(raw_followers)
-    data["body"] = str({"followers": raw_followers})
-    print(data)
-    response = requests.post(MAKE_2_0_AUTH_URL, json=data)
-    return response.json()
+
+    if lead_followers:
+        new_data = {
+            "url": f"/contacts/{lead_id}/followers",
+            "action": "delete",
+            "body": str({"followers": lead_followers})
+        }
+        delete_response = requests.post(MAKE_2_0_AUTH_URL, json=new_data)
+        delete_response.raise_for_status()
+
+    if raw_followers:
+        data["body"] = str({"followers": raw_followers})
+        print(data)
+        add_response = requests.post(MAKE_2_0_AUTH_URL, json=data)
+        add_response.raise_for_status()
+        return add_response.json()
+
+    return {"status_code": 200}
+

@@ -114,7 +114,7 @@ def prepare_json_data_for_ghl(data: dict) -> dict:
 
 def get_user_to_auto_assign(data: dict):
     users = requests.get( # In production change port from 5000 to 5007
-        "http://127.0.0.1:5007/users", headers={"x-api-key": os.getenv("FLASK_API_KEY")}
+        "http://127.0.0.1:5000/users", headers={"x-api-key": os.getenv("FLASK_API_KEY")}
     ).json()
 
     potential_number_1_user = data.get("assigned_realtor")

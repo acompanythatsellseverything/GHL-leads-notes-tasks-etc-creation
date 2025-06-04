@@ -154,7 +154,7 @@ def delete_lead(lead_id):
     # end delete lead block ______________________________
 
 
-@app.route('/lead/<string:lead_id>/followers', methods=['POST'])
+@app.route('/lead/<string:lead_id>/followers', methods=['POST', 'DELETE'])
 def add_followers_to_lead(lead_id):
 
     # auth block ______________________________________________
@@ -172,6 +172,9 @@ def add_followers_to_lead(lead_id):
         if followers.get("status_code") == 201:
             logger.info(f"Followers was added")
             return jsonify({"message": f"followers added successfully"}), 201
+        elif followers.get("status_code") == 200:
+            logger.info(f"Followers was deleted")
+            return jsonify({"message": f"followers deleted successfully"}), 200
 
     except ValidationError as err:
         send_slack_notification("Validation Error while adding followers\n" + str(err))
