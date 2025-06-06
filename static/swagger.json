@@ -815,7 +815,7 @@
     "/lead/{lead_id}/followers": {
       "post": {
         "summary": "add followers(collaborators) to lead",
-        "description": "add followers(collaborators) to lead",
+        "description": "If you send an empty “followers” array, the followers will be deleted.\n If the payload contains a user ID, the followers will be replaced with the user ID you specified in the payload",
         "security": [
           {
             "ApiKeyAuth": []
