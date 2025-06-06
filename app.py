@@ -154,7 +154,7 @@ def delete_lead(lead_id):
     # end delete lead block ______________________________
 
 
-@app.route('/lead/<string:lead_id>/followers', methods=['POST', 'DELETE'])
+@app.route('/lead/<string:lead_id>/followers', methods=['POST'])
 def add_followers_to_lead(lead_id):
 
     # auth block ______________________________________________
