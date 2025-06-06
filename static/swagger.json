@@ -844,6 +844,18 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "follower deleted successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "followers deleted successfully"
+                }
+              }
+            }
+          },
           "201": {
             "description": "follower added successfully",
             "schema": {
