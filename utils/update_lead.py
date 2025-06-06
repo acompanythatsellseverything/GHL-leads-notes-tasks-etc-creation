@@ -14,7 +14,7 @@ load_dotenv()
 GHL_API_KEY = os.getenv('GHL_API_KEY')
 MAKE_2_0_AUTH_URL = os.getenv('MAKE_GHL_2_0_AUTH_URL')
 HEADERS = {'Authorization': f'Bearer {GHL_API_KEY}'}
-UPDATE_BASE_URL = "https://rest.gohighlevel.com/v2/contacts/"
+UPDATE_BASE_URL = "https://rest.gohighlevel.com/v1/contacts/"
 
 
 def prepare_lead_data(data: dict) -> dict:
