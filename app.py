@@ -164,7 +164,7 @@ def add_followers_to_lead(lead_id):
     logger.info(f"Received followers request {request.json}")
     # end auth block _____________________________________________
 
-    # delete lead block ____________________________________________
+    # add followers to lead block ____________________________________________
     try:
         validated_data = followers_schema.load(request.json)
         followers = add_followers(lead_id, validated_data)
@@ -187,7 +187,7 @@ def add_followers_to_lead(lead_id):
         return jsonify({"message": f"Error: {e}"}), 400
     logger.info(f"followers weren't added")
     return jsonify({"message": f"Something went wrong, followers weren't added"}), 202
-    # end delete lead block ______________________________
+    # end of followers to lead block ______________________________
 
 
 @app.route('/get_lead', methods=['POST'])
